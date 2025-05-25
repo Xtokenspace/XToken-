@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="XToken - Премиальные услуги фотографии, видеосъёмки, веб-разработки, программирования, услуг красоты и подбора номеров.">
+    <meta name="keywords" content="фотография, видеосъёмка, веб-разработка, программирование, услуги красоты, подбор номера, XToken">
+    <title>XToken - Премиальные Услуги</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/framer-motion@7.6.1/dist/framer-motion.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #0a0a0a, #1c2526);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.7;
+        }
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+        .preloader-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-transform: uppercase;
+            animation: glow 2s infinite;
+        }
+        .preloader-progress {
+            width: 200px;
+            height: 4px;
+            background: #333;
+            margin-top: 1rem;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .preloader-progress-bar {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            transition: width 0.7s ease;
+        }
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+            100% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        }
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-transform: uppercase;
+            line-height: 1.2;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav-logo span {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #d4af37;
+        }
+        .nav-links {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.98);
+            padding: 1rem;
+            gap: 0.5rem;
+            z-index: 100;
+            align-items: center;
+            max-width: 300px;
+            margin: 0 auto;
+            right: 0;
+        }
+        .nav-links.active {
+            display: flex;
+        }
+        .nav-links a {
+            color: #b0b0b0;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            padding: 0.6rem 0;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.2s forwards;
+            width: 100%;
+            min-height: 44px;
+        }
+        .nav-links a:nth-child(1) { animation-delay: 0.1s; }
+        .nav-links a:nth-child(2) { animation-delay: 0.2s; }
+        .nav-links a:nth-child(3) { animation-delay: 0.3s; }
+        .nav-links a:nth-child(4) { animation-delay: 0.4s; }
+        .nav-links a:nth-child(5) { animation-delay: 0.5s; }
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        .nav-links a:hover {
+            color: #d4af37;
+        }
+        .nav-icon {
+            width: 16px;
+            height: 16px;
+            filter: brightness(0.7);
+            transition: filter 0.3s ease;
+        }
+        .nav-links a:hover .nav-icon {
+            filter: brightness(1);
+        }
+        .language-switcher {
+            display: flex;
+            gap: 0.6rem;
+        }
+        .language-btn {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            padding: 0.4rem;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .language-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        }
+        .language-btn.active {
+            background: #ffffff;
+            color: #0d0d0d;
+        }
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 101;
+            pointer-events: auto;
+        }
+        .hamburger span {
+            width: 24px;
+            height: 3px;
+            background: #d4af37;
+            margin: 2px 0;
+            transition: all 0.3s ease;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, transparent 85%);
+            z-index: -1;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 5px 25px rgba(212, 175, 55, 0.7);
+            transform: translateZ(0);
+            white-space: nowrap;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        .hero .group-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 5px 25px rgba(212, 175, 55, 0.7);
+            margin-top: 0.5rem;
+        }
+        .hero p {
+            font-size: 1.4rem;
+            color: #b0b0b0;
+            margin: 1.5rem 0;
+            max-width: 600px;
+        }
+        .hero .btn {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            font-weight: 700;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.4s ease;
+        }
+        .hero .btn:hover::before {
+            left: 100%;
+        }
+        .hero .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.8);
+        }
+        .services {
+            max-width: 1600px;
+            margin: 8rem auto;
+            padding: 6rem 1.5rem;
+            position: relative;
+        }
+        .services h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 4rem;
+            text-shadow: 0 3px 15px rgba(212, 175, 55, 0.5);
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .service-card {
+            position: relative;
+            background: linear-gradient(135deg, #1c2526, #0d0d0d);
+            border: 2px solid #d4af37;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            overflow: hidden;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.8);
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.5));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        .service-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .service-card p {
+            color: #b0b0b0;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .service-card a {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            font-weight: 700;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .service-card a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.4s ease;
+        }
+        .service-card a:hover::before {
+            left: 100%;
+        }
+        .service-card a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6);
+        }
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.7));
+            transition: transform 0.5s ease, filter 0.5s ease;
+            animation: float 3s ease-in-out infinite;
+        }
+        .service-card:hover .service-icon {
+            transform: rotate(15deg) scale(1.2);
+            filter: drop-shadow(0 0 25px rgba(212, 175, 55, 1));
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        footer {
+            background: #0a0a0a;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            border-top: 2px solid #d4af37;
+        }
+        footer p {
+            color: #b0b0b0;
+            margin: 0.8rem 0;
+            font-size: 1rem;
+        }
+        footer a {
+            color: #d4af37;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: #f0c14b;
+        }
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .trust-badge {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 20px;
+        }
+        .telegram-btn {
+            display: inline-block;
+            padding: 0.6rem;
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        .telegram-btn:hover {
+            transform: scale(1.3);
+        }
+        .telegram-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        .chat-btn, .audio-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            font-weight: 700;
+            padding: 0.8rem;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 10;
+        }
+        .audio-btn {
+            right: 6rem;
+            background: linear-gradient(90deg, #b8972e, #d4af37);
+            font-size: 1.2rem;
+        }
+        .chat-btn:hover, .audio-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.8);
+        }
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+ânsito
+
+                padding: 8rem 1.5rem;
+            }
+            .hero h1 {
+                font-size: 1.3rem;
+                letter-spacing: 1px;
+            }
+            .hero .group-title {
+                font-size: 2.8rem;
+                letter-spacing: 2px;
+            }
+            .hero p {
+                font-size: 1.1rem;
+                max-width: 90%;
+            }
+            .hero .btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            .services {
+                margin: 6rem auto;
+                padding: 4rem 1.5rem;
+            }
+            .services h2 {
+                font-size: 2.2rem;
+            }
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            .service-card {
+                padding: 1.5rem;
+            }
+            .service-card h3 {
+                font-size: 1.5rem;
+            }
+            .service-card p {
+                font-size: 0.9rem;
+            }
+            .service-card a {
+                padding: 0.7rem 1.8rem;
+                font-size: 0.9rem;
+            }
+            .service-icon {
+                width: 50px;
+                height: 50px;
+            }
+            .chat-btn, .audio-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+            .audio-btn {
+                right: 5.5rem;
+            }
+            .nav-container {
+                padding: 0.8rem;
+            }
+            .nav-links {
+                max-width: 90%;
+            }
+            .nav-links a {
+                font-size: 0.9rem;
+                padding: 0.5rem 0;
+                min-height: 44px;
+                justify-content: flex-start;
+            }
+            .nav-icon {
+                width: 12px;
+                height: 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1rem;
+                letter-spacing: 0.5px;
+            }
+            .hero .group-title {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .hero .btn {
+                padding: 0.7rem 1.8rem;
+                font-size: 0.9rem;
+            }
+            .nav-logo, .nav-logo span {
+                font-size: 0.8rem;
+            }
+            .language-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            .services h2 {
+                font-size: 1.8rem;
+            }
+            .service-icon {
+                width: 45px;
+                height: 45px;
+            }
+            .service-card {
+                padding: 1.2rem;
+            }
+            .service-card h3 {
+                font-size: 1.3rem;
+            }
+            .service-card p {
+                font-size: 0.85rem;
+            }
+            .service-card a {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.85rem;
+            }
+            .footer p {
+                font-size: 0.9rem;
+            }
+            .trust-badge {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.7rem;
+            }
+            .telegram-icon {
+                width: 20px;
+                height: 20px;
+            }
+            .telegram-btn {
+                padding: 0.5rem;
+            }
+            .hamburger span {
+                width: 20px;
+                height: 2px;
+                margin: 2px 0;
+            }
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -7px);
+            }
+            .nav-links {
+                max-width: 90%;
+            }
+            .nav-links a {
+                font-size: 0.9rem;
+                padding: 0.5rem 0;
+                min-height: 44px;
+                justify-content: flex-start;
+            }
+            .nav-icon {
+                width: 12px;
+                height: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="preloader">
+        <div class="preloader-logo">XToken</div>
+        <div class="preloader-progress">
+            <div class="preloader-progress-bar"></div>
+        </div>
+    </div>
+    <canvas id="webgl-canvas"></canvas>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="nav-logo">XToken<br><span>group</span></a>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links">
+                <a href="/photos" data-lang-key="nav-photos">
+                    <img src="https://img.icons8.com/ios-filled/50/d4af37/camera.png" alt="Photo" class="nav-icon">
+                    <span>Фото и Видео</span>
+                </a>
+                <a href="/websites" data-lang-key="nav-websites">
+                    <img src="https://img.icons8.com/ios-filled/50/d4af37/web.png" alt="Websites" class="nav-icon">
+                    <span>Сайты</span>
+                </a>
+                <a href="/programming" data-lang-key="nav-programming">
+                    <img src="https://img.icons8.com/ios-filled/50/d4af37/code.png" alt="Programming" class="nav-icon">
+                    <span>Программирование</span>
+                </a>
+                <a href="/beauty" data-lang-key="nav-beauty">
+                    <img src="https://img.icons8.com/ios-filled/50/d4af37/spa-flower.png" alt="Beauty" class="nav-icon">
+                    <span>Услуги Красоты</span>
+                </a>
+                <a href="/phone-services" data-lang-key="nav-phone-service">
+                    <img src="https://img.icons8.com/ios-filled/50/d4af37/phone.png" alt="Phone Service" class="nav-icon">
+                    <span>Подбор Номера</span>
+                </a>
+            </div>
+            <div class="language-switcher">
+                <button class="language-btn active" data-lang="ru">RU</button>
+                <button class="language-btn" data-lang="en">EN</button>
+                <button class="language-btn" data-lang="fr">FR</button>
+            </div>
+        </div>
+    </nav>
+    <div class="hero">
+        <h1 data-lang-key="hero-title">Добро пожаловать</h1>
+        <div class="group-title">XToken Group</div>
+        <p data-lang-key="hero-subtitle">Ваше премиальное место для креативных и технических услуг.</p>
+        <a href="#services" class="btn" data-lang-key="hero-button">Изучить услуги</a>
+    </div>
+    <div class="services" id="services">
+        <h2 data-lang-key="services-title">Наши Услуги</h2>
+        <div class="service-grid">
+            <div class="service-card">
+                <img src="https://img.icons8.com/ios-filled/50/d4af37/camera.png" alt="Photo" class="service-icon">
+                <h3 data-lang-key="photos-title">Фото и Видео</h3>
+                <p data-lang-key="photos-description">Запечатлейте свои моменты с профессиональными услугами фотографии и видеосъёмки.</p>
+                <a href="/photos" data-lang-key="learn-more">Узнать больше</a>
+            </div>
+            <div class="service-card">
+                <img src="https://img.icons8.com/ios-filled/50/d4af37/web.png" alt="Websites" class="service-icon">
+                <h3 data-lang-key="websites-title">Создание Сайтов</h3>
+                <p data-lang-key="websites-description">Индивидуальные сайты, адаптированные под ваши нужды, от статичных до интернет-магазинов.</p>
+                <a href="/websites" data-lang-key="learn-more">Узнать больше</a>
+            </div>
+            <div class="service-card">
+                <img src="https://img.icons8.com/ios-filled/50/d4af37/code.png" alt="Programming" class="service-icon">
+                <h3 data-lang-key="programming-title">Программирование</h3>
+                <p data-lang-key="programming-description">Программные решения на заказ для приложений, автоматизации и многого другого.</p>
+                <a href="/programming" data-lang-key="learn-more">Узнать больше</a>
+            </div>
+            <div class="service-card">
+                <img src="https://img.icons8.com/ios-filled/50/d4af37/spa-flower.png" alt="Beauty" class="service-icon">
+                <h3 data-lang-key="beauty-title">Услуги Красоты</h3>
+                <p data-lang-key="beauty-description">Элегантные и профессиональные beauty-услуги для любого случая.</p>
+                <a href="/beauty" data-lang-key="learn-more">Узнать больше</a>
+            </div>
+            <div class="service-card">
+                <img src="https://img.icons8.com/ios-filled/50/d4af37/phone.png" alt="Phone Service" class="service-icon">
+                <h3 data-lang-key="phone-service-title">Подбор Номера и Тарифа</h3>
+                <p data-lang-key="phone-service-description">Поможем найти красивый номер телефона и подобрать оптимальный тарифный план.</p>
+                <a href="/phone-services" data-lang-key="learn-more">Узнать больше</a>
+            </div>
+        </div>
+    </div>
+    <footer>
+               <div class="trust-badges">
+            <span class="trust-badge" data-lang-key="trust-gdpr">Соответствует GDPR</span>
+            <span class="trust-badge" data-lang-key="trust-ssl">Защищено SSL</span>
+            <span class="trust-badge" data-lang-key="trust-clients">1000+ Довольных Клиентов</span>
+        </div>
+        <p>
+            <a href="/privacy" data-lang-key="footer-privacy">Политика конфиденциальности</a> | 
+            <a href="/terms" data-lang-key="footer-terms">Условия использования</a>
+        </p>
+        <p class="mt-2 text-sm" data-lang-key="footer-copyright">© 2025 XToken. Все права защищены.</p>
+    </footer>
+        <button class="audio-btn" id="audio-toggle">🔇</button>
+    <audio id="background-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+        function safeQuerySelector(selector, context = document) {
+            const element = context.querySelector(selector);
+            if (!element) console.warn(`Element not found: ${selector}`);
+            return element;
+        }
+        function safeQuerySelectorAll(selector, context = document) {
+            const elements = context.querySelectorAll(selector);
+            if (elements.length === 0) console.warn(`No elements found: ${selector}`);
+            return elements;
+        }
+
+        function initWebGL() {
+            const canvas = safeQuerySelector('#webgl-canvas');
+            if (!canvas) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const particleCount = window.innerWidth < 768 ? 500 : 1000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const velocities = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+                velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+                velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+                velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({
+                color: 0xd4af37,
+                size: 0.05,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+            camera.position.z = 10;
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            });
+
+            window.addEventListener('deviceorientation', (e) => {
+                mouseX = e.gamma / 90;
+                mouseY = e.beta / 90;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                positions.forEach((_, i) => {
+                    positions[i] += velocities[i];
+                    if (Math.abs(positions[i]) > 10) {
+                        positions[i] *= -0.9;
+                    }
+                });
+                geometry.attributes.position.needsUpdate = true;
+                particles.rotation.y += 0.001 + mouseX * 0.002;
+                particles.rotation.x += mouseY * 0.002;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+            });
+        }
+
+        function initScrollAnimations() {
+            const elements = safeQuerySelectorAll('.hero h1, .hero .group-title, .hero p, .hero .btn, .services h2, .service-card, footer, .trust-badge, .chat-btn, .audio-btn');
+            elements.forEach(el => {
+                el.style.opacity = '0';
+                const observer = new IntersectionObserver(([entry]) => {
+                    if (entry.isIntersecting) {
+                        el.animate([
+                            { opacity: 0, transform: 'translateY(50px)' },
+                            { opacity: 1, transform: 'translateY(0)' }
+                        ], {
+                            duration: 1000,
+                            easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+                            fill: 'forwards'
+                        });
+                        observer.unobserve(el);
+                    }
+                }, { threshold: 0.1 });
+                observer.observe(el);
+            });
+        }
+
+        function initMobileMenu() {
+            const hamburger = safeQuerySelector('.hamburger');
+            const navLinks = safeQuerySelector('.nav-links');
+            if (!hamburger || !navLinks) return;
+
+            hamburger.addEventListener('click', () => {
+                console.log('Hamburger clicked');
+                navLinks.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+
+            const navLinksItems = safeQuerySelectorAll('.nav-links a');
+            navLinksItems.forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    hamburger.classList.remove('active');
+                });
+            });
+        }
+
+        function initPreloader() {
+            const preloader = safeQuerySelector('.preloader');
+            const progressBar = safeQuerySelector('.preloader-progress-bar');
+            if (!preloader || !progressBar) return;
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = `${progress}%`;
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    preloader.animate([
+                        { opacity: 1 },
+                        { opacity: 0 }
+                    ], {
+                        duration: 300,
+                        easing: 'ease-out',
+                        fill: 'forwards'
+                    }).onfinish = () => {
+                        preloader.style.display = 'none';
+                    };
+                }
+            }, 70);
+        }
+
+        function initAudio() {
+            const audio = safeQuerySelector('#background-audio');
+            const toggleBtn = safeQuerySelector('#audio-toggle');
+            if (!audio || !toggleBtn) return;
+
+            audio.volume = 0.2;
+            let isPlaying = false;
+            toggleBtn.textContent = '🔇';
+
+            toggleBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    audio.pause();
+                    toggleBtn.textContent = '🔇';
+                    isPlaying = false;
+                } else {
+                    audio.play().catch(e => console.error('Audio play failed:', e));
+                    isPlaying = true;
+                }
+            });
+
+            audio.onplaying = () => {
+                isPlaying = true;
+                toggleBtn.textContent = '🔊';
+            };
+            audio.onpause = () => {
+                isPlaying = false;
+                toggleBtn.textContent = '🔇';
+            };
+        }
+
+        const translations = {
+            en: {
+                'hero-title': 'Welcome',
+                'hero-subtitle': 'Your premium destination for creative and technical services.',
+                'hero-button': 'Explore Services',
+                'services-title': 'Our Services',
+                'photos-title': 'Photo & Video',
+                'photos-description': 'Capture your moments with professional photography and videography services.',
+                'websites-title': 'Website Creation',
+                'websites-description': 'Custom websites tailored to your business needs, from static sites to e-commerce.',
+                'programming-title': 'Custom Programming',
+                'programming-description': 'Bespoke software solutions for apps, automation, and more.',
+                'beauty-title': 'Beauty Services',
+                'beauty-description': 'Elegant and professional beauty services for every occasion.',
+                'phone-service-title': 'Number & Tariff Selection',
+                'phone-service-description': 'We help find beautiful phone numbers and choose the optimal tariff plan.',
+                'learn-more': 'Learn More',
+                'nav-photos': 'Photo & Video',
+                'nav-websites': 'Websites',
+                'nav-programming': 'Programming',
+                'nav-beauty': 'Beauty Services',
+                'nav-phone-service': 'Number Selection',
+                'footer-contact': 'Contact us for premium creative and technical solutions.',
+                'trust-gdpr': 'GDPR Compliant',
+                'trust-ssl': 'SSL Secured',
+                'trust-clients': '1000+ Happy Clients',
+                'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Use',
+                'footer-copyright': '© 2025 XToken. All rights reserved.',
+                'chat-button': '💬'
+            },
+            fr: {
+                'hero-title': 'Bienvenue',
+                'hero-subtitle': 'Votre destination premium pour des services créatifs et techniques.',
+                'hero-button': 'Découvrir les services',
+                'services-title': 'Nos Services',
+                'photos-title': 'Photo & Vidéo',
+                'photos-description': 'Immortalisez vos moments avec des services professionnels de photographie et de vidéographie.',
+                'websites-title': 'Création de Sites Web',
+                'websites-description': 'Sites web sur mesure adaptés à vos besoins, des sites statiques au commerce électronique.',
+                'programming-title': 'Programmation sur Mesure',
+                'programming-description': 'Solutions logicielles sur mesure pour applications, automatisation, et plus encore.',
+                'beauty-title': 'Services de Beauté',
+                'beauty-description': 'Services de beauté élégants et professionnels pour toutes les occasions.',
+                'phone-service-title': 'Sélection de Numéro et Tarif',
+                'phone-service-description': 'Nous aidons à trouver de beaux numéros de téléphone et à choisir le plan tarifaire optimal.',
+                'learn-more': 'En savoir plus',
+                'nav-photos': 'Photo & Vidéo',
+                'nav-websites': 'Sites Web',
+                'nav-programming': 'Programmation',
+                'nav-beauty': 'Services de Beauté',
+                'nav-phone-service': 'Sélection Numéro',
+                'footer-contact': 'Contactez-nous pour des solutions créatives et techniques premium.',
+                'trust-gdpr': 'Conforme au RGPD',
+                'trust-ssl': 'Sécurisé par SSL',
+                'trust-clients': '1000+ Clients Satisfaits',
+                'footer-privacy': 'Politique de confidentialité',
+                'footer-terms': 'Conditions d’utilisation',
+                'footer-copyright': '© 2025 XToken. Tous droits réservés.',
+                'chat-button': '💬'
+            },
+            ru: {
+                'hero-title': 'Добро пожаловать',
+                'hero-subtitle': 'Ваше премиальное место для креативных и технических услуг.',
+                'hero-button': 'Изучить услуги',
+                'services-title': 'Наши Услуги',
+                'photos-title': 'Фото и Видео',
+                'photos-description': 'Запечатлейте свои моменты с профессиональными услугами фотографии и видеосъёмки.',
+                'websites-title': 'Создание Сайтов',
+                'websites-description': 'Индивидуальные сайты, адаптированные под ваши нужды, от статичных до интернет-магазинов.',
+                'programming-title': 'Разработка программ',
+                'programming-description': 'Программные решения на заказ для приложений, автоматизации и многого другого.',
+                'beauty-title': 'Услуги Красоты',
+                'beauty-description': 'Элегантные и профессиональные beauty-услуги для любого случая.',
+                'phone-service-title': 'Подбор Номера и Тарифа',
+                'phone-service-description': 'Поможем найти красивый номер телефона и подобрать оптимальный тарифный план.',
+                'learn-more': 'Узнать больше',
+                'nav-photos': 'Фото и Видео',
+                'nav-websites': 'Сайты',
+                'nav-programming': 'Разработка программ',
+                'nav-beauty': 'Услуги Красоты',
+                'nav-phone-service': 'Подбор Номера',
+                'footer-contact': 'Свяжитесь с нами для премиальных креативных и технических решений.',
+                'trust-gdpr': 'Соответствует GDPR',
+                'trust-ssl': 'Защищено SSL',
+                'trust-clients': '1000+ Довольных Клиентов',
+                'footer-privacy': 'Политика конфиденциальности',
+                'footer-terms': 'Условия использования',
+                'footer-copyright': '© 2025 XToken. Все права защищены.',
+                'chat-button': '💬'
+            }
+        };
+
+        function changeLanguage(lang) {
+            if (!translations[lang]) {
+                console.warn(`Language not found: ${lang}, falling back to 'ru'`);
+                lang = 'ru';
+            }
+
+            const elements = safeQuerySelectorAll('[data-lang-key]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'BUTTON' || element.classList.contains('btn') || element.classList.contains('trust-badge') || element.tagName === 'P' || element.tagName === 'H1' || element.tagName === 'H2' || element.tagName === 'H3') {
+                        if (element.getAttribute('data-lang-key') === 'chat-button' && element.firstChild && element.firstChild.nodeType === Node.TEXT_NODE) {
+                            element.firstChild.nodeValue = translations[lang][key];
+                        } else if (element.getAttribute('data-lang-key') !== 'chat-button') {
+                            element.textContent = translations[lang][key];
+                        }
+                    } else if (element.querySelector('span')) {
+                        const span = element.querySelector('span');
+                        if (span) span.textContent = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            const navLinks = safeQuerySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                const key = link.getAttribute('data-lang-key');
+                const textSpan = link.querySelector('span');
+                if (textSpan && translations[lang][key]) {
+                    textSpan.textContent = translations[lang][key];
+                }
+            });
+
+            const buttons = safeQuerySelectorAll('.language-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            document.documentElement.lang = lang;
+        }
+
+        function initializeApp() {
+            let defaultLang = localStorage.getItem('language');
+            if (!translations[defaultLang]) {
+                defaultLang = 'ru';
+                localStorage.setItem('language', defaultLang);
+            }
+            changeLanguage(defaultLang);
+
+            const languageButtons = safeQuerySelectorAll('.language-btn');
+            languageButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const lang = btn.getAttribute('data-lang');
+                    changeLanguage(lang);
+                    localStorage.setItem('language', lang);
+                });
+            });
+
+            initWebGL();
+            initScrollAnimations();
+            initMobileMenu();
+            initPreloader();
+            initAudio();
+        }
+
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93cb6224684c4539',t:'MTc0NjczMjc0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

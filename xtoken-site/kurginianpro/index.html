@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="description" content="Премиум свадебная фото- и видеосъемка в Сочи и Краснодарском крае. Элегантные, эмоциональные и незабываемые моменты вашего дня.">
+  <meta name="keywords" content="свадебный фотограф Сочи, премиум фотосъемка, свадебная видеосъемка, Краснодарский край, KURGINIAN Production">
+  <title>Элитная свадебная фото- и видеосъемка | KURGINIAN Production | Сочи и Краснодарский край</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      font-family: 'Inter', 'Arial', sans-serif;
+      background-color: #111827;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Georgia&display=swap');
+
+    .hero {
+      background: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .parallax-section {
+      background: url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+      background-size: cover;
+      min-height: 80vh;
+      position: relative;
+      /* Добавлено для параллакс-эффекта на десктопе */
+      background-attachment: fixed;
+    }
+
+    .logo-container {
+      font-family: 'Georgia', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.1rem;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+      color: white;
+      text-transform: uppercase;
+    }
+    .logo-kurginian { font-size: 1.1rem; font-weight: bold; letter-spacing: 0.15rem; }
+    .logo-production { font-size: 0.7rem; letter-spacing: 0.1rem; }
+    .logo-container:hover .logo-kurginian { color: #d4af37; transition: color 0.4s ease; }
+    .logo-container .blink { animation: blink 2s infinite; }
+    @keyframes blink { 50% { opacity: 0.7; } }
+
+    .slider {
+      padding: 2rem 0;
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .slider-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+    }
+    .slider-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out, transform 0.6s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: scale(0.95);
+    }
+    .slider-slide.active {
+      opacity: 1;
+      z-index: 1;
+      transform: scale(1);
+      animation: shake 0.5s ease-in-out;
+    }
+    @keyframes shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-2px); } 40%, 60% { transform: translateX(2px); } }
+    .slider-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Preserve aspect ratio */
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      transition: transform 0.6s ease-in-out, opacity 0.8s ease-in-out;
+    }
+    .slider-slide.active img {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    .slider-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .slider-button:hover {
+      background: rgba(0, 0, 0, 0.8);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .slider-button.left { left: 1rem; }
+    .slider-button.right { right: 1rem; }
+    .slider-dots {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+    .slider-dot {
+      width: 0.75rem;
+      height: 0.75rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .slider-dot.active {
+      background: white;
+      transform: scale(1.3);
+    }
+
+    .mobile-menu {
+      transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+    }
+    .mobile-menu.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s ease-in-out;
+      position: relative;
+      overflow: hidden;
+    }
+    .icon-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+    .icon-button:hover::before {
+      width: 12rem;
+      height: 12rem;
+    }
+    .icon-button:hover {
+      transform: scale(1.1);
+    }
+    .icon-button i { font-size: 1.5rem; color: #333; transition: color 0.3s ease; z-index: 1; }
+    .icon-button.call { background: linear-gradient(135deg, #c0c0c0, #d3d3d3); }
+    .icon-button.call:hover i { color: #555; }
+    .icon-button.whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
+    .icon-button.whatsapp:hover i { color: #fff; }
+    .icon-button.instagram { background: linear-gradient(135deg, #e1306c, #feda77); }
+    .icon-button.instagram:hover i { color: #fff; }
+
+    .lang-dropdown {
+      position: relative;
+    }
+    .lang-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      border-radius: 0.5rem;
+      padding: 0.5rem 0;
+      opacity: 0;
+      transform: translateY(-0.5rem);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      min-width: 6rem;
+      z-index: 50;
+    }
+    .lang-menu.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .lang-menu button {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      text-align: left;
+      color: white;
+      background: transparent;
+      border: none;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+    }
+    .lang-menu button:hover,
+    .lang-menu button:focus {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .hero { min-height: 80vh; background-position: 70% center; }
+      /* Отключаем background-attachment: fixed для мобильных устройств для лучшей производительности */
+      .parallax-section { background-attachment: scroll; min-height: 60vh; }
+      .slider-container { padding-bottom: 66.67%; /* 3:2 aspect ratio for tablets */ }
+      .slider-slide img { object-fit: contain; }
+      .hero h2, .hero p { font-size: clamp(1.5rem, 4vw, 2.5rem); white-space: normal; }
+      .desktop-nav { display: none; }
+      .mobile-nav-button { display: block; }
+    }
+    @media (max-width: 768px) {
+      .hero { min-height: 70vh; background-position: 60% center; }
+      .slider { padding: 1.5rem 0; }
+      .slider-container { padding-bottom: 75%; /* Adjust for mobile */ }
+      .slider-slide img { object-fit: contain; }
+      .slider-button { width: 2.5rem; height: 2.5rem; font-size: 1.2rem; }
+      .logo-container { font-size: 0.8rem; }
+      .logo-kurginian { font-size: 1rem; }
+      .logo-production { font-size: 0.6rem; }
+      .hero h2, .hero p { font-size: clamp(1.25rem, 3.5vw, 2rem); white-space: normal; }
+      .icon-button { width: 3rem; height: 3rem; }
+      .icon-button i { font-size: 1.2rem; }
+      .hero-text { transform: scale(0.95); }
+    }
+    @media (max-width: 480px) {
+      .hero { min-height: 60vh; background-position: center; }
+      .slider { padding: 1rem 0; }
+      .slider-container { padding-bottom: 100%; /* 1:1 aspect ratio for small screens */ }
+      .slider-slide img { object-fit: contain; }
+      .slider-button { width: 2rem; height: 2rem; font-size: 1rem; }
+      .slider-button.left { left: 0.5rem; }
+      .slider-button.right { right: 0.5rem; }
+      .slider-dots { bottom: 0.5rem; }
+      .slider-dot { width: 0.5rem; height: 0.5rem; }
+      .hero h2, .hero p { font-size: clamp(1rem, 3vw, 1.5rem); white-space: normal; }
+      .icon-button { width: 2.5rem; height: 2.5rem; }
+      .icon-button i { font-size: 1rem; }
+      .hero-text { transform: scale(0.9); }
+      .lang-menu { min-width: 5rem; }
+      .lang-menu button { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+    }
+    .mobile-nav-button { display: none; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.20.15/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+  <script type="text/babel">
+    const { useEffect, useState, useRef, useCallback, useMemo } = React;
+
+    // Translations
+    const translations = {
+      ru: {
+        nav: { home: 'Главная', portfolio: 'Портфолио', about: 'О нас', contact: 'Контакты' },
+        hero: { title: 'Ваши драгоценные моменты, навсегда запечатленные в искусстве', subtitle: 'Элитная свадебная Фото и Видео съемка премиум-класса по всему миру!', cta: 'Забронировать дату' },
+        portfolio: { title: 'Портфолио' },
+        about: { title: 'О нас', content: 'KURGINIAN Production — это команда мастеров, страстно увлеченных искусством создания вечных воспоминаний. С более чем 20-летним опытом в свадебной фото- и видеосъемке, мы превращаем каждый момент в кинематографическую историю любви. Наши работы — это элегантность, эмоции и безупречное качество для самых требовательных клиентов Сочи и Краснодарского края.' },
+        contact: { title: 'Свяжитесь с нами' },
+        footer: '© {year} KURGINIAN Production. Все права защищены.'
+      },
+      fr: {
+        nav: { home: 'Accueil', portfolio: 'Portefeuille', about: 'À propos', contact: 'Contact' },
+        hero: { title: 'Vos précieux moments immortalisés dans l’art', subtitle: 'Photographie et vidéographie de mariage élite de classe premium à travers le monde !', cta: 'Réserver une date' },
+        portfolio: { title: 'Portefeuille' },
+        about: { title: 'À propos', content: 'KURGINIAN Production est une équipe de maîtres passionnés par l’art de créer des souvenirs éternels. Avec plus de 20 ans d’expérience en photographie et vidéographie de mariage, nous transformons chaque instant en une histoire cinématographique d’amour. Nos œuvres incarnent élégance, émotion et qualité irréprochable pour les clients les plus exigeants de Sotchi et du kraï de Krasnodar.' },
+        contact: { title: 'Contactez-nous' },
+        footer: '© {year} KURGINIAN Production. Tous droits réservés.'
+      },
+      en: {
+        nav: { home: 'Home', portfolio: 'Portfolio', about: 'About', contact: 'Contact' },
+        hero: { title: 'Your Precious Moments, Forever Captured in Art', subtitle: 'Elite Wedding Photo and Video Production of Premium Class Worldwide!', cta: 'Book a Date' },
+        portfolio: { title: 'Portfolio' },
+        about: { title: 'About Us', content: 'KURGINIAN Production is a team of masters passionately dedicated to the art of creating timeless memories. With over 20 years of experience in wedding photography and videography, we transform every moment into a cinematic love story. Our work embodies elegance, emotion, and impeccable quality for the most discerning clients in Sochi and the Krasnodar Region.' },
+        contact: { title: 'Contact Us' },
+        footer: '© {year} KURGINIAN Production. All rights reserved.'
+      }
+    };
+
+    // --- NavBar Component ---
+    const NavBar = ({ lang, setLang }) => {
+      const logoRef = useRef(null);
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+      const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+      const navRef = useRef(null);
+      const langMenuRef = useRef(null);
+
+      const toggleMobileMenu = useCallback(() => setIsMobileMenuOpen(prev => !prev), []);
+      const closeMenu = useCallback(() => setIsMobileMenuOpen(false), []);
+      const toggleLangMenu = useCallback(() => setIsLangMenuOpen(prev => !prev), []);
+      const closeLangMenu = useCallback(() => setIsLangMenuOpen(false), []);
+
+      useEffect(() => {
+        const logoElement = logoRef.current;
+        if (!logoElement) return;
+
+        const tl = gsap.timeline();
+        tl.to(logoElement, { opacity: 1, scale: 1, duration: 1, ease: 'expo.out', delay: 0.4 })
+          .to(logoElement.querySelector('.logo-kurginian'), { textShadow: "0 0 8px rgba(255, 255, 255, 0.5), 0 1px 3px rgba(0,0,0,0.6)", duration: 2, repeat: -1, yoyo: true, ease: 'sine.inOut' }, "-=0.6");
+
+        return () => tl.kill();
+      }, []);
+
+      useEffect(() => {
+        const handleScroll = () => navRef.current?.classList.toggle('shadow-lg', window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      useEffect(() => {
+        const handleClickOutside = (e) => {
+          if (langMenuRef.current && !langMenuRef.current.contains(e.target)) closeLangMenu();
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+      }, [closeLangMenu]);
+
+      return (
+        <nav ref={navRef} className="fixed top-0 w-full bg-black bg-opacity-70 backdrop-blur-md text-white z-50 transition-shadow duration-300">
+          <div className="container mx-auto flex justify-between items-center py-3 px-4 sm:px-6">
+            <a href="#home" ref={logoRef} className="logo-container" aria-label="KURGINIAN Production Home">
+              <span className="logo-kurginian blink">KURGINIAN</span>
+              <span className="logo-production">Production</span>
+            </a>
+            <ul className="desktop-nav hidden md:flex space-x-6 text-sm font-medium">
+              <li><a href="#home" className="hover:text-gray-300 transition duration-300">{translations[lang].nav.home}</a></li>
+              <li><a href="#portfolio" className="hover:text-gray-300 transition duration-300">{translations[lang].nav.portfolio}</a></li>
+              <li><a href="#about" className="hover:text-gray-300 transition duration-300">{translations[lang].nav.about}</a></li>
+              <li><a href="#contact" className="hover:text-gray-300 transition duration-300">{translations[lang].nav.contact}</a></li>
+            </ul>
+            <div className="flex items-center space-x-3">
+              <div className="lang-dropdown" ref={langMenuRef}>
+                <button
+                  onClick={toggleLangMenu}
+                  className="px-2 py-1 rounded bg-gray-600 hover:bg-gray-700 transition duration-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white"
+                  aria-label="Select Language"
+                  aria-expanded={isLangMenuOpen}
+                >
+                  {lang.toUpperCase()}
+                </button>
+                <div className={`lang-menu ${isLangMenuOpen ? 'open' : ''}`}>
+                  <button onClick={() => { setLang('ru'); closeLangMenu(); }} className="focus:outline-none focus:bg-gray-700">Русский</button>
+                  <button onClick={() => { setLang('en'); closeLangMenu(); }} className="focus:outline-none focus:bg-gray-700">English</button>
+                  <button onClick={() => { setLang('fr'); closeLangMenu(); }} className="focus:outline-none focus:bg-gray-700">Français</button>
+                </div>
+              </div>
+              <button
+                onClick={toggleMobileMenu}
+                className="mobile-nav-button md:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-white z-50"
+                aria-label="Toggle Menu"
+                aria-expanded={isMobileMenuOpen}
+              >
+                <div className="space-y-1.5">
+                  <span className={`block w-6 h-0.5 bg-current transform transition duration-400 ease-in-out ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+                  <span className={`block w-6 h-0.5 bg-current transition duration-400 ease-in-out ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+                  <span className={`block w-6 h-0.5 bg-current transform transition duration-400 ease-in-out ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div className={`mobile-menu md:hidden absolute top-full left-0 w-full bg-black bg-opacity-90 backdrop-blur-sm shadow-lg ${isMobileMenuOpen ? 'open' : ''}`} aria-hidden={!isMobileMenuOpen}>
+            <ul className="flex flex-col items-center space-y-4 py-6">
+              <li><a href="#home" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-300">{translations[lang].nav.home}</a></li>
+              <li><a href="#portfolio" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-300">{translations[lang].nav.portfolio}</a></li>
+              <li><a href="#about" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-300">{translations[lang].nav.about}</a></li>
+              <li><a href="#contact" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-300">{translations[lang].nav.contact}</a></li>
+            </ul>
+          </div>
+        </nav>
+      );
+    };
+
+    // --- Hero Component ---
+    const Hero = ({ lang }) => {
+      const titleRef = useRef(null);
+
+      useEffect(() => {
+        const titleElement = titleRef.current;
+        if (!titleElement) return;
+
+        gsap.fromTo(titleElement.querySelectorAll('span'), { opacity: 0, y: 20 }, {
+          opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.05, delay: 0.8
+        });
+        gsap.to(titleElement, { textShadow: "0 0 12px #d4af37, 0 2px 5px rgba(0,0,0,0.7)", duration: 2, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+      }, []);
+
+      return (
+        <section id="home" className="hero text-center text-white">
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="hero-text py-12 sm:py-16">
+              <h2 ref={titleRef} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 sm:mb-8 text-[#d4af37]">
+                {translations[lang].hero.title.split('').map((char, i) => (
+                  <span key={i} style={{ display: 'inline-block' }}>{char === ' ' ? '\u00A0' : char}</span>
+                ))}
+              </h2>
+              <p className="text-base sm:text-lg md:text-xl mb-8 sm:mb-12 max-w-3xl mx-auto font-semibold" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)', whiteSpace: 'normal' }}>
+                {translations[lang].hero.subtitle}
+              </p>
+              <a
+                href="#contact"
+                className="inline-block bg-white text-black px-6 py-3 sm:px-8 sm:py-3 rounded-full font-semibold hover:bg-gray-200 transition duration-400 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                aria-label={translations[lang].hero.cta}
+              >
+                {translations[lang].hero.cta}
+              </a>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // --- Portfolio Component ---
+    const Portfolio = ({ lang }) => {
+      // ЗАМЕЧАНИЕ: URL-адреса изображений ниже должны быть актуальными и доступными.
+      // URL 'https://lh3.googleusercontent.com/mzNRGPa-FRKogGgJSk9jQmOS4eCr_DBIrN-bhCLWFpEkNfqufhkOK22OEi_lVWPrdkKkHH3NiZ_nQgIUKeF6HMUxsBFXr5gLKFOeRac=w1200-h800-l90-e30' является плейсхолдером.
+      // Логика srcSet также требует, чтобы URL-адреса были структурированы для корректной замены размеров (например, содержали параметр типа 'w=800').
+      // Рекомендуется использовать собственный CDN или надежный хостинг изображений.
+      const images = useMemo(() => [
+        'https://i.pinimg.com/736x/26/ba/dc/26badcca3114403aab1f6431b7341415.jpg', // Пример
+        'https://via.placeholder.com/800x600.png?text=Portfolio+Image+2', // Замените на реальный URL или удалите
+        'https://avatars.mds.yandex.net/i?id=78e38b516aa425468a5df1e1f5046baf_l-5277625-images-thumbs&ref=rim&n=13&w=930&h=1162', // Пример
+        'https://i.pinimg.com/736x/76/5e/19/765e19afd1defd345f2d68d00102c502.jpg', // Пример
+        'https://1portal.ru/sites/default/files/content/articles/svadba_v_gorode.jpg' // Пример
+      ], []);
+
+      const [currentIndex, setCurrentIndex] = useState(0);
+      const portfolioSectionRef = useRef(null);
+      const intervalRef = useRef(null);
+
+      const nextSlide = useCallback(() => {
+        setCurrentIndex(prev => (prev + 1) % images.length);
+      }, [images.length]);
+
+      const prevSlide = useCallback(() => {
+        setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
+      }, [images.length]);
+
+      const goToSlide = useCallback((index) => {
+        setCurrentIndex(index);
+      }, []);
+
+      const resetInterval = useCallback(() => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(nextSlide, 5000);
+      }, [nextSlide]);
+
+      useEffect(() => {
+        gsap.registerPlugin(ScrollTrigger);
+        const sectionElement = portfolioSectionRef.current;
+
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              gsap.from('.portfolio-title', { opacity: 0, y: 50, duration: 1, ease: 'expo.out' });
+              gsap.from('.slider', { opacity: 0, y: 100, duration: 1, ease: 'expo.out', delay: 0.2 });
+            }
+          },
+          { threshold: 0.1 }
+        );
+
+        if (sectionElement) observer.observe(sectionElement);
+
+        let touchStartX = 0;
+        const handleTouchStart = (e) => {
+          touchStartX = e.touches[0].clientX;
+          clearInterval(intervalRef.current);
+        };
+        const handleTouchEnd = (e) => {
+          const touchEndX = e.changedTouches[0].clientX;
+          const swipeThreshold = 50;
+          if (touchStartX - touchEndX > swipeThreshold) nextSlide();
+          else if (touchEndX - touchStartX > swipeThreshold) prevSlide();
+          resetInterval();
+        };
+
+        images.forEach(src => {
+          const img = new Image();
+          img.src = src;
+          // ЗАМЕЧАНИЕ: Для продакшена рассмотрите более продвинутую обработку ошибок загрузки изображений,
+          // например, отображение плейсхолдера или скрытие слайда.
+          img.onerror = () => {
+            console.warn(`Failed to load image: ${src}`);
+            // Можно добавить логику для замены src на плейсхолдер
+            // e.target.src = 'https://via.placeholder.com/800x600.png?text=Image+Not+Found';
+          }
+        });
+
+        sectionElement?.addEventListener('touchstart', handleTouchStart, { passive: true });
+        sectionElement?.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+        resetInterval();
+
+        return () => {
+          clearInterval(intervalRef.current);
+          sectionElement?.removeEventListener('touchstart', handleTouchStart);
+          sectionElement?.removeEventListener('touchend', handleTouchEnd);
+          if (observer && sectionElement) observer.unobserve(sectionElement);
+        };
+      }, [images, nextSlide, prevSlide, resetInterval]); // Добавлен images в зависимости, если он может меняться
+
+      const handlePrevClick = () => { prevSlide(); resetInterval(); };
+      const handleNextClick = () => { nextSlide(); resetInterval(); };
+      const handleDotClick = (index) => { goToSlide(index); resetInterval(); };
+
+      // Функция для создания srcSet. Адаптируйте под вашу структуру URL.
+      // Эта функция предполагает, что ваши URL могут быть модифицированы для разных разрешений.
+      // Если URL не содержат 'w=800', то srcSet будет содержать тот же URL для всех размеров.
+      const createSrcSet = (src) => {
+        if (src.includes('placeholder.com')) { // Не генерируем srcSet для плейсхолдеров
+            return null;
+        }
+        // Пример: если URL содержит параметр для ширины, например, ?w=
+        if (src.includes('w=')) {
+            return `
+                ${src.replace(/w=\d+/, 'w=400')} 400w,
+                ${src.replace(/w=\d+/, 'w=800')} 800w,
+                ${src.replace(/w=\d+/, 'w=1200')} 1200w
+            `;
+        }
+        // Пример: если URL не имеет параметра ширины, но вы знаете как его добавить
+        // (этот пример может не подойти для всех ваших URL)
+        // Предположим, что можно добавить ?w=
+        // Для i.pinimg.com и avatars.mds.yandex.net это не сработает без знания их API.
+        // Для простоты, если нет явного параметра, вернем null, и будет использован только src.
+        return null;
+
+        // Более надежный вариант - если у вас есть разные URL для разных размеров:
+        // return `${src_400px} 400w, ${src_800px} 800w, ${src_1200px} 1200w`;
+      };
+
+
+      return (
+        <section id="portfolio" ref={portfolioSectionRef} className="py-12 sm:py-16 bg-[#000000] text-white">
+          <div className="container mx-auto px-4 sm:px-6">
+            <h2 className="portfolio-title text-2xl sm:text-3xl md:text-4xl font-semibold text-center mb-8 sm:mb-12">{translations[lang].portfolio.title}</h2>
+            <div className="slider">
+              <div className="slider-container">
+                {images.map((src, index) => (
+                  <div
+                    key={index}
+                    className={`slider-slide ${index === currentIndex ? 'active' : ''}`}
+                    aria-hidden={index !== currentIndex}
+                  >
+                    <img
+                      src={src}
+                      // Используем функцию createSrcSet или удаляем srcSet если логика сложная
+                      // srcSet={createSrcSet(src)}
+                      // sizes="(max-width: 480px) 100vw, (max-width: 768px) 80vw, 1200px"
+                      alt={`Свадебное фото ${index + 1}`}
+                      loading="lazy"
+                      onError={(e) => {
+                        // Простой обработчик ошибки на случай, если изображение не загрузится
+                        console.warn(`Image failed to load: ${e.target.src}`);
+                        // e.target.style.display = 'none'; // Скрыть сломанное изображение
+                        // Можно заменить на плейсхолдер:
+                        // e.target.src = 'https://via.placeholder.com/800x600.png?text=Error';
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <button className="slider-button left" onClick={handlePrevClick} aria-label="Previous slide">←</button>
+              <button className="slider-button right" onClick={handleNextClick} aria-label="Next slide">→</button>
+              <div className="slider-dots">
+                {images.map((_, index) => (
+                  <span
+                    key={index}
+                    className={`slider-dot ${index === currentIndex ? 'active' : ''}`}
+                    onClick={() => handleDotClick(index)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleDotClick(index); }}
+                    aria-label={`Go to slide ${index + 1}`}
+                    role="button"
+                    tabIndex={0}
+                  ></span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // --- About Component ---
+    const About = ({ lang }) => {
+      const aboutContentRef = useRef(null);
+
+      useEffect(() => {
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              gsap.from(aboutContentRef.current, { opacity: 0, y: 60, duration: 1, ease: 'expo.out' });
+              // Отключаем observer после первого срабатывания, если анимация нужна только один раз
+              observer.unobserve(entry.target);
+            }
+          },
+          { threshold: 0.1 }
+        );
+
+        if (aboutContentRef.current) observer.observe(aboutContentRef.current);
+
+        return () => {
+            if (observer && aboutContentRef.current) {
+                observer.unobserve(aboutContentRef.current);
+            }
+        }
+      }, []);
+
+      return (
+        <section id="about" className="parallax-section py-16 sm:py-24 text-white">
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-80"></div>
+          <div className="container mx-auto px-4 sm:px-6 text-center relative z-10" ref={aboutContentRef}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-6 sm:mb-8">{translations[lang].about.title}</h2>
+            <p className="text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              {translations[lang].about.content}
+            </p>
+          </div>
+        </section>
+      );
+    };
+
+    // --- Contact Component ---
+    const Contact = ({ lang }) => {
+      return (
+        <section id="contact" className="py-12 sm:py-16 bg-gray-900 text-white">
+          <div className="container mx-auto px-4 sm:px-6 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-8 sm:mb-12">{translations[lang].contact.title}</h2>
+            <div className="flex justify-center gap-4 sm:gap-6">
+              <a href="tel:+79054114746" className="icon-button call" aria-label="Call us" rel="noopener noreferrer"><i className="fas fa-phone"></i></a>
+              <a href="https://api.whatsapp.com/send?phone=79054114746" target="_blank" className="icon-button whatsapp" aria-label="Contact via WhatsApp" rel="noopener noreferrer"><i className="fab fa-whatsapp"></i></a>
+              <a href="https://instagram.com/kurginyan_studio" target="_blank" className="icon-button instagram" aria-label="Follow on Instagram" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // --- App Component ---
+    const App = () => {
+      const [lang, setLang] = useState('ru'); // 'ru' | 'en' | 'fr'
+
+      useEffect(() => {
+        // Регистрация плагинов GSAP
+        gsap.registerPlugin(ScrollTrigger);
+        // gsap.registerPlugin(ScrollToPlugin); // Раскомментируйте, если используете ScrollToPlugin и он не включен в основной gsap.min.js
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              gsap.to(window, {
+                duration: 1,
+                scrollTo: {
+                  y: targetElement.offsetTop,
+                  autoKill: true // Прерывает анимацию, если пользователь начинает скроллить сам
+                },
+                ease: 'expo.inOut'
+              });
+            }
+          });
+        });
+
+        // Очистка при размонтировании компонента (хотя App обычно не размонтируется)
+        // return () => {
+        //   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        //     // Удаление слушателей событий, если это необходимо (здесь может быть излишним)
+        //   });
+        // };
+      }, []);
+
+      return (
+        <div>
+          <NavBar lang={lang} setLang={setLang} />
+          <Hero lang={lang} />
+          <Portfolio lang={lang} />
+          <About lang={lang} />
+          <Contact lang={lang} />
+          <footer className="bg-black text-center py-5 text-gray-500 text-sm border-t border-gray-800">
+            {translations[lang].footer.replace('{year}', new Date().getFullYear())}
+          </footer>
+        </div>
+      );
+    };
+
+    // --- Render App ---
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Премиум свадебная фото- и видеосъемка в Сочи и Краснодарском крае. Элегантные, эмоциональные и незабываемые моменты вашего дня.">
+  <meta name="keywords" content="свадебный фотограф Сочи, премиум фотосъемка, свадебная видеосъемка, Краснодарский край, KURGINIAN Production">
+  <title>Элитная свадебная фото- и видеосъемка | KURGINIAN Production | Сочи и Краснодарский край</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body { margin: 0; overflow-x: hidden; font-family: 'Inter', 'Arial', sans-serif; background-color: #111827; /* Default dark bg */ }
+    /* Fallback font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Georgia&display=swap');
+
+    .hero { background: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover; }
+    .parallax-section { background-attachment: fixed; }
+
+    /* Logo Styles */
+    .logo-container {
+      font-family: 'Georgia', serif;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+      transform: scale(0.9); /* Initial state for animation */
+      opacity: 0; /* Initial state for animation */
+      color: white; /* Ensure text color */
+      text-transform: uppercase; /* Make Production uppercase too if needed */
+    }
+    .logo-kurginian {
+        font-size: 1rem; /* Slightly larger top part */
+        font-weight: bold;
+        letter-spacing: 1.5px; /* More spacing for uppercase */
+    }
+     .logo-production {
+         font-size: 0.7rem; /* Smaller bottom part */
+         letter-spacing: 1px;
+     }
+
+    /* Slider Styles - Keep as before */
+    .slider-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: 500px;
+      margin: 0 auto;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slider-item {
+      position: absolute;
+      width: 60%; max-width: 450px;
+      height: 80%; max-height: 400px;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.7s ease-out, box-shadow 0.5s ease;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      opacity: 0; transform: scale(0.8);
+      background-color: #374151;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .slider-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slider-item.active { opacity: 1; transform: translateX(0) scale(1); z-index: 10; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); }
+    .slider-item.prev { opacity: 0.4; transform: translateX(-50%) scale(0.8); z-index: 5; }
+    .slider-item.next { opacity: 0.4; transform: translateX(50%) scale(0.8); z-index: 5; }
+    .slider-item.far-prev { opacity: 0; transform: translateX(-100%) scale(0.7); z-index: 1; }
+    .slider-item.far-next { opacity: 0; transform: translateX(100%) scale(0.7); z-index: 1; }
+    .slider-button {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 20;
+      background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%;
+      width: 40px; height: 40px; font-size: 24px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .slider-button:hover { background-color: rgba(0, 0, 0, 0.8); transform: translateY(-50%) scale(1.1); }
+    .slider-button.left { left: 15px; }
+    .slider-button.right { right: 15px; }
+
+    /* Mobile Menu Styles */
+    .mobile-menu {
+        transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none; /* Disable interaction when hidden */
+    }
+    .mobile-menu.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto; /* Enable interaction when visible */
+    }
+
+    /* Responsive Adjustments - Keep as before, adjust nav */
+    @media (max-width: 768px) {
+      .slider-container { height: 400px; }
+      .slider-item { width: 70%; max-width: 350px; height: 75%; max-height: 300px; }
+      .slider-item.prev { transform: translateX(-40%) scale(0.8); }
+      .slider-item.next { transform: translateX(40%) scale(0.8); }
+      .slider-button { width: 35px; height: 35px; font-size: 20px; }
+      .logo-container { font-size: 0.7rem; }
+      .logo-kurginian { font-size: 0.9rem; }
+      .logo-production { font-size: 0.6rem; }
+      .hero h2 { font-size: 2.5rem; }
+      .hero p { font-size: 1rem; }
+      .desktop-nav { display: none; } /* Hide desktop nav links */
+      .mobile-nav-button { display: block; } /* Show mobile burger button */
+    }
+     @media (max-width: 480px) {
+        .slider-container { height: 320px; }
+        .slider-item { width: 80%; max-width: 280px; height: 70%; max-height: 240px; }
+        .slider-item.prev { transform: translateX(-35%) scale(0.75); }
+        .slider-item.next { transform: translateX(35%) scale(0.75); }
+        .slider-button.left { left: 5px; }
+        .slider-button.right { right: 5px; }
+        .hero h2 { font-size: 2rem; }
+     }
+     /* Default state for mobile button */
+     .mobile-nav-button { display: none; }
+
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.20.15/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+  <script type="text/babel">
+    const { useEffect, useState, useRef, useCallback } = React; // Added useCallback
+
+    // --- NavBar Component ---
+    const NavBar = () => {
+      const logoRef = useRef(null);
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+      const navRef = useRef(null); // Ref for the nav element
+
+      const toggleMobileMenu = useCallback(() => {
+          setIsMobileMenuOpen(prev => !prev);
+      }, []);
+
+      // Close mobile menu when a link is clicked
+      const closeMenu = useCallback(() => {
+          setIsMobileMenuOpen(false);
+      }, []);
+
+      // Logo Animation Effect
+      useEffect(() => {
+        const logoElement = logoRef.current;
+        if (!logoElement) return;
+
+        const tl = gsap.timeline();
+        tl.to(logoElement, {
+            opacity: 1,
+            scale: 1,
+            duration: 1.5,
+            ease: 'power3.out',
+            delay: 0.3 // Slightly faster start
+          })
+          .to(logoElement, {
+            textShadow: "0 0 8px rgba(255, 255, 255, 0.6), 0 1px 3px rgba(0,0,0,0.7)",
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+          }, "-=0.5"); // Overlap slightly with entrance
+
+          return () => tl.kill(); // Kill timeline on unmount
+
+      }, []);
+
+      // Add shadow on scroll
+       useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 20) {
+                navRef.current?.classList.add('shadow-lg');
+            } else {
+                navRef.current?.classList.remove('shadow-lg');
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+       }, []);
+
+
+      return (
+        <nav ref={navRef} className="fixed top-0 w-full bg-black bg-opacity-70 backdrop-blur-md text-white z-50 transition-shadow duration-300">
+          <div className="container mx-auto flex justify-between items-center py-3 px-6">
+            {/* Logo */}
+            <a href="#home" ref={logoRef} className="logo-container" aria-label="KURGINIAN Production Home">
+              <span className="logo-kurginian">KURGINIAN</span>
+              <span className="logo-production">Production</span>
+            </a>
+
+            {/* Desktop Navigation */}
+            <ul className="desktop-nav hidden md:flex space-x-8 text-sm font-medium">
+              <li><a href="#home" className="hover:text-gray-300 transition duration-200">Главная</a></li>
+              <li><a href="#portfolio" className="hover:text-gray-300 transition duration-200">Портфолио</a></li>
+              <li><a href="#about" className="hover:text-gray-300 transition duration-200">О нас</a></li>
+              <li><a href="#contact" className="hover:text-gray-300 transition duration-200">Контакты</a></li>
+            </ul>
+
+             {/* Mobile Navigation Button */}
+             <button
+                onClick={toggleMobileMenu}
+                className="mobile-nav-button md:hidden p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white z-50"
+                aria-label="Toggle Menu"
+                aria-expanded={isMobileMenuOpen}
+            >
+                 {/* Animated Burger Icon */}
+                 <div className="space-y-1.5">
+                    <span className={`block w-6 h-0.5 bg-current transform transition duration-300 ease-in-out ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+                    <span className={`block w-6 h-0.5 bg-current transition duration-300 ease-in-out ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+                    <span className={`block w-6 h-0.5 bg-current transform transition duration-300 ease-in-out ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+                </div>
+            </button>
+
+          </div>
+
+           {/* Mobile Menu Panel */}
+           <div
+                className={`mobile-menu md:hidden absolute top-full left-0 w-full bg-black bg-opacity-90 backdrop-blur-sm shadow-lg ${isMobileMenuOpen ? 'open' : ''}`}
+                aria-hidden={!isMobileMenuOpen}
+            >
+                <ul className="flex flex-col items-center space-y-4 py-6">
+                    <li><a href="#home" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-200">Главная</a></li>
+                    <li><a href="#portfolio" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-200">Портфолио</a></li>
+                    <li><a href="#about" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-200">О нас</a></li>
+                    <li><a href="#contact" onClick={closeMenu} className="block py-2 text-lg hover:text-gray-300 transition duration-200">Контакты</a></li>
+                </ul>
+            </div>
+        </nav>
+      );
+    };
+
+    // --- Hero Component --- (Keep as before, maybe adjust timings)
+    const Hero = () => {
+      useEffect(() => {
+        gsap.fromTo('.hero-text > *',
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+            stagger: 0.2,
+            delay: 0.8 // Delay slightly more to ensure nav is animated
+          }
+        );
+      }, []);
+      return (
+        <section id="home" className="hero h-screen flex items-center justify-center text-center text-white">
+          <div className="bg-black bg-opacity-50 p-6 md:p-8 rounded-lg shadow-xl"> {/* Increased shadow */}
+             <div className="hero-text">
+                <h2 className="text-4xl md:text-6xl font-bold mb-4">Ваши моменты, запечатленные в вечности</h2>
+                <p className="text-lg md:text-xl mb-8 max-w-xl mx-auto">Премиум свадебная фото- и видеосъемка в Сочи и Краснодарском крае</p>
+                <a href="#contact" className="inline-block bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">Забронировать дату</a>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // --- Portfolio Component --- (Keep slider logic as before)
+    const Portfolio = () => {
+      const images = [
+        'https://images.unsplash.com/photo-1523438943922-ac866499a92d?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1515934751635-c81c6bc962d8?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1500917941902-0dc038617866?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1542042161784-26ab9e041e89?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1511795409834-ef04bbdf6171?auto=format&fit=crop&w=800&q=80'
+      ];
+      const [currentIndex, setCurrentIndex] = useState(0);
+      const portfolioSectionRef = useRef(null);
+      const intervalRef = useRef(null);
+
+      const nextSlide = useCallback(() => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+      }, [images.length]);
+
+      const prevSlide = useCallback(() => {
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+      }, [images.length]);
+
+      const resetInterval = useCallback(() => {
+         if (intervalRef.current) clearInterval(intervalRef.current);
+         intervalRef.current = setInterval(nextSlide, 5500); // Slightly longer interval
+      }, [nextSlide]);
+
+      useEffect(() => {
+        gsap.registerPlugin(ScrollTrigger);
+        const sectionElement = portfolioSectionRef.current;
+
+        const stAnims = []; // Keep track of scroll triggers
+
+        stAnims.push(gsap.from('.portfolio-title', {
+          opacity: 0, y: 50, duration: 1, scrollTrigger: {
+            trigger: sectionElement, start: 'top 85%', toggleActions: 'play none none none'
+          }
+        }));
+        stAnims.push(gsap.from('.slider-container', {
+          opacity: 0, y: 100, duration: 1.2, ease: 'power3.out', scrollTrigger: {
+            trigger: sectionElement, start: 'top 80%', toggleActions: 'play none none none'
+          }
+        }));
+
+        let touchStartX = 0;
+        const handleTouchStart = (e) => { touchStartX = e.touches[0].clientX; clearInterval(intervalRef.current); };
+        const handleTouchEnd = (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const swipeThreshold = 50;
+            if (touchStartX - touchEndX > swipeThreshold) nextSlide();
+            else if (touchEndX - touchStartX > swipeThreshold) prevSlide();
+            resetInterval();
+        };
+
+        sectionElement?.addEventListener('touchstart', handleTouchStart, { passive: true });
+        sectionElement?.addEventListener('touchend', handleTouchEnd, { passive: true });
+        resetInterval();
+
+        return () => {
+          clearInterval(intervalRef.current);
+          sectionElement?.removeEventListener('touchstart', handleTouchStart);
+          sectionElement?.removeEventListener('touchend', handleTouchEnd);
+          stAnims.forEach(anim => anim.scrollTrigger?.kill()); // Kill associated ScrollTriggers
+        };
+      }, [images.length, nextSlide, prevSlide, resetInterval]);
+
+      const handlePrevClick = () => { prevSlide(); resetInterval(); };
+      const handleNextClick = () => { nextSlide(); resetInterval(); };
+
+       const getSlideClass = (index) => {
+            const totalImages = images.length;
+            if (index === currentIndex) return 'slider-item active';
+            const prevIndex = (currentIndex - 1 + totalImages) % totalImages;
+            if (index === prevIndex) return 'slider-item prev';
+            const nextIndex = (currentIndex + 1) % totalImages;
+            if (index === nextIndex) return 'slider-item next';
+            const farPrevIndex = (currentIndex - 2 + totalImages) % totalImages;
+            if (index === farPrevIndex) return 'slider-item far-prev';
+            const farNextIndex = (currentIndex + 2 + totalImages) % totalImages;
+             if (index === farNextIndex) return 'slider-item far-next';
+            return 'slider-item';
+        };
+
+      return (
+        <section id="portfolio" ref={portfolioSectionRef} className="py-20 bg-gray-100 text-gray-900">
+          <div className="container mx-auto px-4 sm:px-6">
+            <h2 className="portfolio-title text-4xl font-bold text-center mb-16">Портфолио</h2>
+            <div className="slider-container">
+              {images.map((src, index) => (
+                <div key={index} className={getSlideClass(index)}>
+                  <img src={src} alt={`Свадебное фото ${index + 1}`} loading="lazy" />
+                </div>
+              ))}
+              <button onClick={handlePrevClick} className="slider-button left" aria-label="Previous slide">&#8592;</button>
+              <button onClick={handleNextClick} className="slider-button right" aria-label="Next slide">&#8594;</button>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    // --- About Component --- (Keep as before, maybe refine animation)
+    const About = () => {
+       const aboutContentRef = useRef(null);
+        useEffect(() => {
+            const st = gsap.from(aboutContentRef.current, {
+                opacity: 0, y: 60, duration: 1.2, ease: 'power3.out', scrollTrigger: {
+                    trigger: '#about', start: 'top 75%', toggleActions: 'play none none none',
+                }
+            });
+             return () => st.scrollTrigger?.kill();
+        }, []);
+
+        return (
+            <section id="about" className="parallax-section py-24 text-white relative" style={{ background: 'url(https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1920&q=80) no-repeat center center/cover', backgroundAttachment: 'fixed' }}>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent opacity-80"></div> {/* Gradient Overlay */}
+                <div className="container mx-auto px-6 text-center relative z-10" ref={aboutContentRef}>
+                    <h2 className="text-4xl font-bold mb-8">О нас</h2>
+                    <p className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                    KURGINIAN Production — это команда мастеров, страстно увлеченных искусством создания вечных воспоминаний. С более чем 20-летним опытом в свадебной фото- и видеосъемке, мы превращаем каждый момент в кинематографическую историю любви. Наши работы — это элегантность, эмоции и безупречное качество для самых требовательных клиентов Сочи и Краснодарского края.
+                    </p>
+                </div>
+            </section>
+        );
+    };
+
+
+    // --- Contact Component ---
+    const Contact = () => {
+         const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+         const [formStatus, setFormStatus] = useState({ submitting: false, success: false, error: false, message: '' });
+
+         const handleInputChange = (e) => {
+            const { name, value } = e.target;
+            setFormData(prev => ({ ...prev, [name]: value }));
+         };
+
+         const handleSubmit = (e) => {
+            e.preventDefault(); // Prevent default page reload
+            setFormStatus({ submitting: true, success: false, error: false, message: 'Отправка...' });
+
+            // --- Simulate sending data ---
+            // In a real app, you would use fetch() or axios here to send data to a server
+            console.log("Form Data Submitted:", formData);
+            setTimeout(() => {
+                // Simulate success
+                setFormStatus({ submitting: false, success: true, error: false, message: 'Сообщение успешно отправлено! Мы скоро свяжемся с вами.' });
+                setFormData({ name: '', email: '', message: '' }); // Clear form
+
+                // Optional: Hide success message after a few seconds
+                 setTimeout(() => setFormStatus({ submitting: false, success: false, error: false, message: '' }), 5000);
+
+                // --- Simulate error (uncomment to test) ---
+                // setFormStatus({ submitting: false, success: false, error: true, message: 'Ошибка отправки. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.' });
+
+            }, 1500); // Simulate network delay
+         };
+
+
+        return (
+            <section id="contact" className="py-20 bg-gray-900 text-white">
+                <div className="container mx-auto px-6 text-center">
+                <h2 className="text-4xl font-bold mb-12">Свяжитесь с нами</h2>
+                <form className="max-w-lg mx-auto" onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Ваше имя"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        aria-label="Ваше имя"
+                        className="w-full p-3 mb-4 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Ваш email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        aria-label="Ваш email"
+                        className="w-full p-3 mb-4 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" />
+                    <textarea
+                        name="message"
+                        placeholder="Ваше сообщение (дата свадьбы, место, пожелания)"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        required
+                        aria-label="Ваше сообщение"
+                        className="w-full p-3 mb-6 bg-gray-800 border border-gray-700 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" rows="5"></textarea>
+                    <button
+                         type="submit"
+                         disabled={formStatus.submitting}
+                         className={`w-full sm:w-auto bg-white text-black px-8 py-3 rounded-full font-semibold transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${formStatus.submitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'}`}
+                    >
+                        {formStatus.submitting ? 'Отправка...' : 'Отправить запрос'}
+                    </button>
+                </form>
+
+                {/* Form Status Message */}
+                {formStatus.message && (
+                    <p className={`mt-6 text-center ${formStatus.success ? 'text-green-400' : formStatus.error ? 'text-red-400' : 'text-gray-400'}`}>
+                        {formStatus.message}
+                    </p>
+                )}
+
+
+                {/* Other Contact Details */}
+                <div className="mt-12 text-gray-400 space-y-2">
+                        <p>
+                            Телефон: <a href="tel:+79054114746" className="hover:text-white transition duration-200">+7 (905) 411-47-46</a>
+                        </p>
+                        <p>
+                             Email: <a href="mailto:info@kurginianproduction.ru" className="hover:text-white transition duration-200">info@kurginyanproduction.ru</a> {/* Make email clickable too */}
+                        </p>
+                        {/* Add social icons here if needed */}
+                        {/* Example:
+                        <div className="flex justify-center space-x-4 mt-4">
+                            <a href="#" aria-label="Instagram" className="hover:text-white transition duration-200">[Icon]</a>
+                            <a href="#" aria-label="VK" className="hover:text-white transition duration-200">[Icon]</a>
+                        </div>
+                        */}
+                    </div>
+                </div>
+            </section>
+        );
+    };
+
+    // --- App Component ---
+    const App = () => (
+      <div>
+        <NavBar />
+        <Hero />
+        <Portfolio />
+        <About />
+        <Contact />
+         <footer className="bg-black text-center py-5 text-gray-500 text-sm border-t border-gray-800">
+            © {new Date().getFullYear()} KURGINIAN Production. Все права защищены.
+        </footer>
+      </div>
+    );
+
+    // --- Render App ---
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

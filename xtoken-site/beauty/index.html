@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Celebrations & Beauty Atelier</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a0d2b, #5e2e7a);
+            color: #f8e1d4;
+            font-family: 'Cinzel Decorative', serif;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            min-height: 100vh;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            opacity: 0.2;
+            z-index: -1;
+            filter: blur(4px);
+            animation: subtleMove 20s linear infinite;
+        }
+        @keyframes subtleMove {
+            0% { background-position: center center; }
+            50% { background-position: center 48%; }
+            100% { background-position: center center; }
+        }
+        .header-logo {
+            display: flex;
+            flex-direction: column;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #e8b923;
+            text-shadow: 0 0 10px #e8b923;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .header-logo:hover {
+            color: #f8e1d4;
+            text-shadow: 0 0 20px #f8e1d4;
+        }
+        .section-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #ffd700, #fff5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.8), 0 0 2px rgba(255, 255, 255, 0.5);
+            animation: glow 3s infinite alternate;
+            letter-spacing: 2px;
+        }
+        .dropdown, .language-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-btn, .language-btn {
+            background: rgba(232, 185, 35, 0.3);
+            border: 2px solid #e8b923;
+            color: #f8e1d4;
+            padding: 8px 20px;
+            border-radius: 30px;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-btn:hover, .language-btn:hover {
+            background: #e8b923;
+            color: #1a0d2b;
+        }
+        .dropdown-btn i {
+            font-size: 1.2rem;
+        }
+        .dropdown-content, .language-content {
+            display: none;
+            position: absolute;
+            background: rgba(42, 30, 58, 0.9);
+            border: 2px solid #e8b923;
+            border-radius: 10px;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 10;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .language-content {
+            min-width: 100px;
+            right: auto;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .dropdown-content a, .language-content button {
+            color: #f8e1d4;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        .dropdown-content a:hover, .language-content button:hover {
+            background: #e8b923;
+            color: #1a0d2b;
+        }
+        .dropdown:hover .dropdown-content, .language-dropdown:hover .language-content {
+            display: block;
+        }
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2.5rem;
+            }
+            .dropdown-btn, .language-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .dropdown-btn i {
+                font-size: 1rem;
+            }
+            .dropdown-content, .language-content {
+                min-width: 150px;
+            }
+            .dropdown-content a, .language-content button {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            .header-center {
+                position: static;
+                transform: none;
+            }
+        }
+        .card {
+            background: rgba(42, 30, 58, 0.9);
+            border: 3px solid #e8b923;
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(232, 185, 35, 0.25) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+            opacity: 0.5;
+            z-index: 0;
+        }
+        .card:hover {
+            transform: translateY(-15px) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(232, 185, 35, 0.6);
+        }
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+        .card-icon {
+            font-size: 3rem;
+            color: #e8b923;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+        }
+        .card:hover .card-icon {
+            transform: rotate(360deg) scale(1.3);
+        }
+        .btn-book {
+            background: linear-gradient(45deg, #e8b923, #f8e1d4);
+            color: #1a0d2b;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-book:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #e8b923;
+        }
+        @media (max-width: 768px) {
+            .card {
+                padding: 15px;
+            }
+            .card-icon {
+                font-size: 2rem;
+            }
+            .btn-book {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        /* Particle Styles */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(232, 185, 35, 0.7);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+            box-shadow: 0 0 10px rgba(232, 185, 35, 0.5);
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 12px rgba(255, 215, 0, 0.8), 0 0 2px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 18px rgba(255, 245, 225, 0.9), 0 0 3px rgba(255, 255, 255, 0.7); }
+        }
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center text-center p-4 sm:p-10">
+    <canvas id="particles"></canvas>
+    <header class="w-full flex justify-between items-center p-4 sm:p-8 relative">
+        <a href="https://xtoken.space" class="header-logo">
+            <span>XTOKEN</span>
+            <span>GROUP</span>
+        </a>
+        <div class="header-center">
+            <div class="dropdown">
+                <button class="dropdown-btn"><i class="fas fa-bars"></i></button>
+                <div class="dropdown-content">
+                    <a href="#service1">Bridal Splendor</a>
+                    <a href="#service2">Regal Ambiance</a>
+                    <a href="#service3">Festive Grandeur</a>
+                    <a href="#service4">Timeless Memories</a>
+                    <a href="#service5">Gourmet Indulgence</a>
+                    <a href="#service6">Seamless Orchestration</a>
+                </div>
+            </div>
+        </div>
+        <div class="language-dropdown">
+            <button class="language-btn">FR</button>
+            <div class="language-content">
+                <button onclick="changeLanguage('ru')">RU</button>
+                <button onclick="changeLanguage('fr')">FR</button>
+                <button onclick="changeLanguage('en')">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-7xl">
+        <h1 class="section-title mb-8 sm:mb-16" id="title">Élégance Élevée</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-12">
+            <!-- Bridal Beauty -->
+            <div class="card" id="service1">
+                <div class="card-content">
+                    <i class="fas fa-palette card-icon"></i>
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-4" id="service1-title">Splendeur Nuptiale</h2>
+                    <p id="service1-desc">Maquillage exquis, art ongulaire raffiné et coiffures majestueuses pour votre jour inoubliable.</p>
+                    <button class="btn-book mt-8">Embrace Your Elegance</button>
+                </div>
+            </div>
+            <!-- Event Decoration -->
+            <div class="card" id="service2">
+                <div class="card-content">
+                    <i class="fas fa-crown card-icon"></i>
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-4" id="service2-title">Ambiance Régale</h2>
+                    <p id="service2-desc">Tables opulentes, décors extérieurs envoûtants et compositions florales époustouflantes.</p>
+                    <button class="btn-book mt-8">Curate Your Majesty</button>
+                </div>
+            </div>
+            <!-- Entertainment -->
+            <div class="card" id="service3">
+                <div class="card-content">
+                    <i class="fas fa-microphone-alt card-icon"></i>
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-4" id="service3-title">Grandeur Festive</h2>
+                    <p id="service3-desc">DJ de renommée mondiale, performances orchestrales et animateurs charismatiques.</p>
+                    <button class="btn-book mt-8">Ignite the Celebration</button>
+                </div>
+            </div>
+            <!-- Photography & Videography -->
+            <div class="card" id="service4">
+                <div class="card-content">
+                    <i class="fas fa-video card-icon"></i>
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-4" id="service4-title">Souvenirs Intemporels</h2>
+                    <p id="service4-desc">Photographie artistique et vidéographie cinématographique pour capturer vos moments à jamais.</p>
+                    <button class="btn-book mt-8">Preserve Your Legacy</button>
+                </div>
+            </div>
+            <!-- Luxury Catering -->
+            <div class="card" id="service5">
+                <div class="card-content">
+                    <i class="fas fa-glass-cheers card-icon"></i>
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-4" id="service5-title">Indulgence Gastronomique</h2>
+                    <p id="service5-desc">Cuisine raffinée et accords mets-vins soigneusement sélectionnés par des chefs célèbres.</p>
+                    <button class="btn-book mt-8">Savor the Extravagance</button>
+                </div>
+            </div>
+            <!-- Event Planning -->
+            <div class="card" id="service6">
+                <div class="card-content">
+                    <i class="fas fa-scroll card-icon"></i>
+                    <h2 class="text-xl sm:text-2xl font-semibold mb-4" id="service6-title">Orchestration Parfaite</h2>
+                    <p id="service6-desc">Planification impeccable et designs sur mesure pour une célébration au-delà de la perfection.</p>
+                    <button class="btn-book mt-8">Create Your Masterpiece</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full p-6 text-center text-base sm:text-lg">
+        <p>© 2025 XTOKEN GROUP. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let lang = 'fr';
+        const translations = {
+            en: {
+                title: "Elegance Elevated",
+                service1: { title: "Bridal Splendor", desc: "Exquisite makeup, intricate nail artistry, and majestic hairstyles for your unforgettable wedding day." },
+                service2: { title: "Regal Ambiance", desc: "Opulent table designs, enchanting outdoor settings, and breathtaking floral artistry." },
+                service3: { title: "Festive Grandeur", desc: "World-class DJs, orchestral performances, and charismatic hosts." },
+                service4: { title: "Timeless Memories", desc: "Artistic photography and cinematic videography to capture your moments forever." },
+                service5: { title: "Gourmet Indulgence", desc: "Exquisite cuisine and curated wine pairings crafted by celebrated chefs." },
+                service6: { title: "Seamless Orchestration", desc: "Impeccable planning and bespoke designs for a celebration beyond perfection." }
+            },
+            ru: {
+                title: "Возвышенная Элегантность",
+                service1: { title: "Свадебное Великолепие", desc: "Изысканный макияж, утонченный маникюр и величественные прически для вашего незабываемого дня." },
+                service2: { title: "Королевская Атмосфера", desc: "Роскошные столы, завораживающие уличные оформления и восхитительные цветочные композиции." },
+                service3: { title: "Праздничное Величие", desc: "Диджеи мирового класса, оркестровые выступления и харизматичные ведущие." },
+                service4: { title: "Вечные Воспоминания", desc: "Художественная фото- и видеосъемка для сохранения ваших моментов навсегда." },
+                service5: { title: "Гурманское Наслаждение", desc: "Изысканные блюда и подобранные вина от прославленных шеф-поваров." },
+                service6: { title: "Идеальная Организация", desc: "Безупречное планирование и уникальный дизайн для праздника за гранью совершенства." }
+            },
+            fr: {
+                title: "Élégance Élevée",
+                service1: { title: "Splendeur Nuptiale", desc: "Maquillage exquis, art ongulaire raffiné et coiffures majestueuses pour votre jour inoubliable." },
+                service2: { title: "Ambiance Régale", desc: "Tables opulentes, décors extérieurs envoûtants et compositions florales époustouflantes." },
+                service3: { title: "Grandeur Festive", desc: "DJ de renommée mondiale, performances orchestrales et animateurs charismatiques." },
+                service4: { title: "Souvenirs Intemporels", desc: "Photographie artistique et vidéographie cinématographique pour capturer vos moments à jamais." },
+                service5: { title: "Indulgence Gastronomique", desc: "Cuisine raffinée et accords mets-vins soigneusement sélectionnés par des chefs célèbres." },
+                service6: { title: "Orchestration Parfaite", desc: "Planification impeccable et designs sur mesure pour une célébration au-delà de la perfection." }
+            }
+        };
+
+        function changeLanguage(langCode) {
+            lang = langCode;
+            document.getElementById('title').textContent = translations[lang].title;
+            document.getElementById('service1-title').textContent = translations[lang].service1.title;
+            document.getElementById('service1-desc').textContent = translations[lang].service1.desc;
+            document.getElementById('service2-title').textContent = translations[lang].service2.title;
+            document.getElementById('service2-desc').textContent = translations[lang].service2.desc;
+            document.getElementById('service3-title').textContent = translations[lang].service3.title;
+            document.getElementById('service3-desc').textContent = translations[lang].service3.desc;
+            document.getElementById('service4-title').textContent = translations[lang].service4.title;
+            document.getElementById('service4-desc').textContent = translations[lang].service4.desc;
+            document.getElementById('service5-title').textContent = translations[lang].service5.title;
+            document.getElementById('service5-desc').textContent = translations[lang].service5.desc;
+            document.getElementById('service6-title').textContent = translations[lang].service6.title;
+            document.getElementById('service6-desc').textContent = translations[lang].service6.desc;
+            document.querySelector('.language-btn').textContent = lang.toUpperCase();
+        }
+
+        // Particle Animation
+        function createParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 5 + 2,
+                    speedY: -(Math.random() * 2 + 1)
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(232, 185, 35, 0.7)';
+                    ctx.fill();
+
+                    particle.y += particle.speedY;
+                    if (particle.y < -particle.size) {
+                        particle.y = canvas.height + particle.size;
+                        particle.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Set default language to French and start particles on page load
+        window.onload = function() {
+            changeLanguage('fr');
+            createParticles();
+        };
+    </script>
+</body>
+</html>

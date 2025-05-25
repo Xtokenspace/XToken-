@@ -1,0 +1,1363 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XToken Numbers - Numéros Uniques</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0d0d0d;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        .language-switcher {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+        .language-btn, .home-btn {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            padding: 0.5rem 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 500;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .language-btn.visible, .home-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .language-btn:hover, .home-btn:hover {
+            transform: scale(1.1);
+        }
+        .language-btn.active {
+            background: #ffffff;
+            color: #0d0d0d;
+        }
+        .home-btn {
+            font-size: 1.2rem;
+        }
+        .hero {
+            padding: 6rem 1rem;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .hero h1.visible {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .hero p.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+        }
+        .premium-btn {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            font-weight: 700;
+            padding: 0.8rem 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+            transition: transform 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .premium-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+        }
+        .premium-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.6);
+        }
+        .features, .reviews {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin: 4rem 0;
+        }
+        .feature-card, .review-card {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+        }
+        .feature-card.visible, .review-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .feature-card:nth-child(1) { transition-delay: 0s; }
+        .feature-card:nth-child(2) { transition-delay: 0.2s; }
+        .feature-card:nth-child(3) { transition-delay: 0.4s; }
+        .review-card:nth-child(1) { transition-delay: 0s; }
+        .review-card:nth-child(2) { transition-delay: 0.2s; }
+        .review-card:nth-child(3) { transition-delay: 0.4s; }
+        .feature-card .back, .review-card .back {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            color: #ffffff;
+            visibility: visible;
+            opacity: 1;
+        }
+        .feature-card h3, .review-card h3 {
+            font-size: 1.5rem;
+            color: #d4af37;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .feature-card p, .review-card p {
+            color: #b0b0b0;
+            font-size: 1rem;
+            overflow-wrap: break-word;
+        }
+        .review-card h4 {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+        .stars {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        .review-label {
+            color: #d4af37;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .form-section {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.2);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        .form-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .form-section h2 {
+            font-size: 2rem;
+            color: #d4af37;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .form-section p {
+            color: #b0b0b0;
+            margin-bottom: 1.5rem;
+        }
+        .package-btn {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            font-weight: 700;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 0.5rem;
+            display: inline-block;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .package-btn.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .package-btn:nth-child(1) { transition-delay: 0s; }
+        .package-btn:nth-child(2) { transition-delay: 0.1s; }
+        .package-btn:nth-child(3) { transition-delay: 0.2s; }
+        .package-btn:nth-child(4) { transition-delay: 0.3s; }
+        .package-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.6);
+        }
+        .package-btn.active {
+            background: #ffffff;
+            color: #0d0d0d;
+            border: 2px solid #d4af37;
+        }
+        .package-details {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid #d4af37;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .package-details.active {
+            display: block !important;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .package-details.visible {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        #package-xyyxy-details, #package-4x-details, #package-5x-details, #package-5x2y-details {
+            display: none !important;
+        }
+        #package-xyyxy-details.active, #package-4x-details.active, #package-5x-details.active, #package-5x2y-details.active {
+            display: block !important;
+        }
+        .order-form {
+            display: none;
+            margin-top: 2rem;
+        }
+        .order-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-size: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .form-input.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .form-input:nth-child(1) { transition-delay: 0s; }
+        .form-input:nth-child(2) { transition-delay: 0.1s; }
+        .form-input:nth-child(3) { transition-delay: 0.2s; }
+        .form-input:nth-child(4) { transition-delay: 0.3s; }
+        .form-input:nth-child(5) { transition-delay: 0.4s; }
+        .form-input:focus {
+            outline: none;
+            border-color: #f0c14b;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+        }
+        .data-plan-select {
+            display: none;
+            margin-top: 1rem;
+        }
+        .data-plan-select.active {
+            display: block;
+        }
+        .data-plan-option {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .data-plan-option.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .data-plan-option:nth-child(1) { transition-delay: 0s; }
+        .data-plan-option:nth-child(2) { transition-delay: 0.1s; }
+        .data-plan-option:nth-child(3) { transition-delay: 0.2s; }
+        .data-plan-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.6);
+        }
+        .data-plan-option.selected {
+            background: linear-gradient(90deg, #f0c14b, #d4af37);
+            border: 2px solid #ffffff;
+        }
+        .payment-options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .payment-btn {
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            font-weight: 700;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .payment-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .payment-btn:nth-child(1) { transition-delay: 0s; }
+        .payment-btn:nth-child(2) { transition-delay: 0.2s; }
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.6);
+        }
+        .payment-instruction {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            text-align: left;
+            animation: fadeIn 0.5s ease-out;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .payment-instruction.active {
+            display: block;
+        }
+        .payment-instruction.visible {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .payment-instruction h4 {
+            font-size: 1.25rem;
+            color: #d4af37;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .payment-instruction ol {
+            list-style: decimal;
+            padding-left: 1.5rem;
+            color: #b0b0b0;
+        }
+        .payment-instruction li {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        .wallet-address {
+            color: #d4af37;
+            font-weight: 700;
+            word-break: break-all;
+            display: inline-block;
+            margin: 0.25rem 0;
+        }
+        .payment-instruction a {
+            color: #d4af37;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        .payment-instruction a:hover {
+            color: #f0c14b;
+ 
+ 
+        }
+        .chat-btn {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            color: #0d0d0d;
+            font-weight: 700;
+            padding: 0.8rem;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+            transition: transform 0.3s ease;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        .chat-btn.visible {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .chat-btn:hover {
+            transform: scale(1.1);
+        }
+        footer {
+            background: #0d0d0d;
+            padding: 2rem;
+            text-align: center;
+            border-top: 2px solid #d4af37;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        footer.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        footer p {
+            color: #b0b0b0;
+            margin: 0.5rem 0;
+        }
+        footer a {
+            color: #d4af37;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: #f0c14b;
+        }
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .trust-badge {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .trust-badge.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .trust-badge:nth-child(1) { transition-delay: 0s; }
+        .trust-badge:nth-child(2) { transition-delay: 0.2s; }
+        .trust-badge:nth-child(3) { transition-delay: 0.4s; }
+        .telegram-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        .telegram-btn {
+            display: inline-block;
+            padding: 0.5rem;
+            background: linear-gradient(90deg, #d4af37, #b8972e);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        .telegram-btn.visible {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .telegram-btn:hover {
+            transform: scale(1.1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 1024px) {
+            .features, .reviews {
+                flex-direction: column;
+                align-items: center;
+            }
+            .feature-card, .review-card {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1rem;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .premium-btn {
+                padding: 0.6rem 2rem;
+                font-size: 0.9rem;
+            }
+            .feature-card, .review-card {
+                padding: 1rem;
+                height: 250px;
+            }
+            .form-section {
+                margin: 1.5rem;
+                padding: 1.5rem;
+            }
+            .form-section h2 {
+                font-size: 1.5rem;
+            }
+            .language-switcher {
+                top: 0.5rem;
+                right: 0.5rem;
+                gap: 0.3rem;
+            }
+            .language-btn, .home-btn {
+                padding: 0.4rem 0.8rem;
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+            .home-btn {
+                font-size: 1rem;
+            }
+            .package-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            .chat-btn {
+                width: 50px;
+                height: 50px;
+            }
+            .payment-options {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .payment-btn {
+                padding: 0.6rem 1.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .premium-btn {
+                padding: 0.5rem 1.5rem;
+                font-size: 0.8rem;
+            }
+            .package-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            .form-input {
+                font-size: 0.9rem;
+            }
+            .feature-card, .review-card {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+    </script>
+    <canvas id="numberCanvas"></canvas>
+    <div class="container">
+        <div class="language-switcher">
+            <a href="https://xtoken.space" class="home-btn" title="Home">🏠</a>
+            <button class="language-btn active" data-lang="fr">FR</button>
+            <button class="language-btn" data-lang="en">EN</button>
+            <button class="language-btn" data-lang="ru">RU</button>
+        </div>
+        <div class="hero">
+            <h1 data-lang-key="hero-title">XTOKEN NUMBERS</h1>
+            <p data-lang-key="hero-subtitle">Obtenez un numéro de téléphone unique et mémorable, choisi spécialement pour vous.</p>
+            <a href="#form" class="premium-btn" data-lang-key="hero-button">COMMANDER MAINTENANT</a>
+        </div>
+        <div class="features">
+            <div class="feature-card">
+                <div class="back">
+                    <h3 data-lang-key="feature1-title">NUMÉROS PREMIUM</h3>
+                    <p data-lang-key="feature1-description">Chiffres répétés, séquences miroir ou combinaisons personnalisées selon vos envies.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="back">
+                    <h3 data-lang-key="feature2-title">ENREGISTREMENT LÉGAL</h3>
+                    <p data-lang-key="feature2-description">Tous les numéros sont enregistrés officiellement avec vos informations, en conformité avec la loi.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="back">
+                    <h3 data-lang-key="feature3-title">OPÉRATEURS FIABLES</h3>
+                    <p data-lang-key="feature3-description">Nous travaillons avec NRJ Mobile, Orange, SFR, Bouygues et plus encore.</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-section" id="form">
+            <h2 data-lang-key="form-title">COMMANDEZ VOTRE NUMÉRO UNIQUE</h2>
+            <p data-lang-key="form-subtitle">Choisissez votre type de numéro premium ci-dessous, puis remplissez le formulaire pour passer commande.</p>
+            <div class="package-selection">
+                <button class="package-btn" data-package="4X" data-lang-key="package-4x-button">4X - 200€</button>
+                <button class="package-btn" data-package="5X" data-lang-key="package-5x-button">5X - 500€</button>
+                <button class="package-btn" data-package="5X2Y" data-lang-key="package-5x2y-button">5X2Y - 1200€</button>
+                <button class="package-btn" data-package="XYYXXY" data-lang-key="package-xyyxy-button">XYYXXY - 400€</button>
+            </div>
+            <div class="package-details" id="package-4x-details">
+                <h3 data-lang-key="package-4x-title">4X - 200€</h3>
+                <p data-lang-key="package-4x-description">Numéro avec 4 chiffres identiques consécutifs et 3 chiffres différents (ex. 074328XXXX, 0743XXXX28).</p>
+            </div>
+            <div class="package-details" id="package-5x-details">
+                <h3 data-lang-key="package-5x-title">5X - 500€</h3>
+                <p data-lang-key="package-5x-description">Numéro avec 5 chiffres identiques consécutifs et 2 chiffres différents (ex. 07432XXXXX, 0743XXXXX8).</p>
+            </div>
+            <div class="package-details" id="package-5x2y-details">
+                <h3 data-lang-key="package-5x2y-title">5X2Y - 1200€</h3>
+                <p data-lang-key="package-5x2y-description">Numéro avec 5 chiffres identiques consécutifs et 2 chiffres identiques (ex. 074YYXXXXX, 074XXXXXYY).</p>
+            </div>
+            <div class="package-details" id="package-xyyxy-details">
+                <h3 data-lang-key="package-xyyxy-title">XYYXXY - 400€</h3>
+                <p data-lang-key="package-xyyxy-description">Numéro composé de seulement 2 chiffres différents après 074 (ex. 074XXYYYYXX, 074XXXYYYX).</p>
+            </div>
+            <div class="data-plan-select" id="data-plan-select">
+                <h4 data-lang-key="data-plan-title">Quel forfait préférez-vous ?</h4>
+                <div class="data-plan-option" data-plan="10Go" data-lang-key="data-plan-10">10Go - 4-6€/mois</div>
+                <div class="data-plan-option" data-plan="90Go" data-lang-key="data-plan-90">90Go - 6-9€/mois</div>
+                <div class="data-plan-option" data-plan="150Go" data-lang-key="data-plan-150">150Go - 9-12€/mois</div>
+            </div>
+            <form class="order-form" id="order-form">
+                <input type="hidden" name="package" id="selected-package">
+                <input type="hidden" name="data-plan" id="selected-data-plan">
+                <div class="flex flex-wrap -mx-2">
+                    <div class="w-full md:w-1/2 px-2">
+                        <input type="text" class="form-input" name="firstName" placeholder="Prénom" data-lang-key="form-firstname-placeholder" required>
+                    </div>
+                    <div class="w-full md:w-1/2 px-2">
+                        <input type="text" class="form-input" name="lastName" placeholder="Nom" data-lang-key="form-lastname-placeholder" required>
+                    </div>
+                </div>
+                <input type="date" class="form-input" name="birthDate" data-lang-key="form-birthdate-placeholder" required>
+                <input type="text" class="form-input" name="birthPlace" placeholder="Lieu de naissance" data-lang-key="form-birthplace-placeholder" required>
+                <input type="tel" class="form-input" name="phone" placeholder="Numéro de téléphone" data-lang-key="form-phone-placeholder" required>
+                <textarea class="form-input" name="deliveryAddress" rows="4" placeholder="Adresse de livraison" data-lang-key="form-address-placeholder" required></textarea>
+                <input type="text" class="form-input" name="rib" placeholder="RIB (optionnel pour abonnement mensuel)" data-lang-key="form-rib-placeholder">
+                <div class="payment-options">
+                    <button type="button" class="payment-btn crypto-btn" data-lang-key="crypto-pay-button">Payer en crypto</button>
+                    <button type="button" class="payment-btn card-btn" data-lang-key="card-pay-button">Payer par carte</button>
+                </div>
+                <div class="payment-instruction" id="crypto-instruction">
+                    <h4 data-lang-key="payment-instruction-title">Instructions de paiement en cryptomonnaie</h4>
+                    <ol>
+                        <li data-lang-key="payment-instruction-crypto-step1">Transférez le montant correspondant à votre forfait en USDT (réseau Binance Smart Chain "BEP20") à l'adresse suivante :</li>
+                        <p class="wallet-address">0xAF65984C35B43C7E83048ac668587c28d05F6124</p>
+                        <li data-lang-key="payment-instruction-crypto-step2">Après avoir effectué le paiement, envoyez une capture d'écran de la transaction à notre consultant via <a href="https://t.me/XTokenNumbers">Telegram</a>.</li>
+                        <li data-lang-key="payment-instruction-crypto-step3">Notre équipe validera votre paiement et finalisera votre commande dans les plus brefs délais.</li>
+                    </ol>
+                </div>
+                <button type="button" class="premium-btn mt-4 submit-btn" data-lang-key="submit-button">Envoyer</button>
+            </form>
+            <p class="mt-4 text-sm text-center" data-lang-key="form-privacy">*Vos données sont protégées conformément au RGPD. Nous ne partageons ni ne stockons vos informations sans votre consentement.</p>
+        </div>
+        <div class="reviews">
+            <div class="review-card">
+                <div class="back">
+                    <div class="review-label" data-lang-key="review-label">Avis</div>
+                    <p data-lang-key="review1-text">J’ai reçu mon numéro en 3 jours, tout est légal !</p>
+                    <h4 data-lang-key="review1-author">Jean, Paris</h4>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="review-card">
+                <div class="back">
+                    <div class="review-label" data-lang-key="review-label">Avis</div>
+                    <p data-lang-key="review2-text">Service au top, numéro parfait !</p>
+                    <h4 data-lang-key="review2-author">Sophie, Lyon</h4>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <div class="review-card">
+                <div class="back">
+                    <div class="review-label" data-lang-key="review-label">Avis</div>
+                    <p data-lang-key="review3-text">Paiement rapide, je recommande !</p>
+                    <h4 data-lang-key="review3-author">Pierre, Marseille</h4>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <a href="#form" class="premium-btn" data-lang-key="hero-button">COMMANDER MAINTENANT</a>
+        </div>
+        <footer>
+            <p data-lang-key="footer-direct-purchase">Achetez directement auprès des principaux fournisseurs de services tels que Orange, SFR, Bouygues et plus encore.</p>
+            <p><a href="https://t.me/XTokenNumbers" class="telegram-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" class="telegram-icon"></a></p>
+            <div class="trust-badges">
+                <span class="trust-badge" data-lang-key="trust-gdpr">Conforme au RGPD</span>
+                <span class="trust-badge" data-lang-key="trust-ssl">Sécurisé par SSL</span>
+                <span class="trust-badge" data-lang-key="trust-orders">500+ numéros délivrés</span>
+            </div>
+            <p>
+                <a href="/privacy" data-lang-key="footer-privacy">Politique de confidentialité</a> | 
+                <a href="/terms" data-lang-key="footer-terms">Conditions d'utilisation</a>
+            </p>
+            <p class="mt-2 text-sm" data-lang-key="footer-copyright">© 2025 XToken Numbers. Tous droits réservés.</p>
+        </footer>
+    </div>
+    <a href="https://t.me/XTokenNumbers" class="chat-btn" data-lang-key="chat-button">💬</a>
+    <script>
+        // Safe DOM querying functions
+        function safeQuerySelector(selector, context = document) {
+            const element = context.querySelector(selector);
+            if (!element) {
+                console.warn(`Element not found: ${selector}`);
+            }
+            return element;
+        }
+
+        function safeQuerySelectorAll(selector, context = document) {
+            const elements = context.querySelectorAll(selector);
+            if (elements.length === 0) {
+                console.warn(`No elements found: ${selector}`);
+            }
+            return elements;
+        }
+
+        // Intersection Observer for animation on scroll
+        function initIntersectionObserver() {
+            const elementsToAnimate = safeQuerySelectorAll('.hero h1, .hero p, .premium-btn, .feature-card, .review-card, .form-section, .package-btn, .package-details, .form-input, .data-plan-option, .payment-btn, .payment-instruction, .chat-btn, footer, .trust-badge, .telegram-btn, .language-btn, .home-btn');
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            elementsToAnimate.forEach(element => observer.observe(element));
+        }
+
+        // Canvas animation
+        function initCanvasAnimation() {
+            const canvas = safeQuerySelector('#numberCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const numbers = ['333', '000', '9999', '55555', '77777', '444'];
+            const particlesArray = [];
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 15 + 10;
+                    this.speedX = Math.random() * 0.2 - 0.1;
+                    this.speedY = Math.random() * 0.2 - 0.1;
+                    this.opacity = Math.random() * 0.3 + 0.2;
+                    this.text = numbers[Math.floor(Math.random() * numbers.length)];
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.opacity > 0.05) this.opacity -= 0.001;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+                draw() {
+                    const gradient = ctx.createLinearGradient(this.x - this.size, this.y, this.x + this.size, this.y);
+                    gradient.addColorStop(0, '#d4af37');
+                    gradient.addColorStop(0.5, '#f0c14b');
+                    gradient.addColorStop(1, '#d4af37');
+                    ctx.fillStyle = gradient;
+                    ctx.globalAlpha = this.opacity;
+                    ctx.font = `${this.size}px Montserrat`;
+                    ctx.textAlign = 'center';
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
+                    ctx.fillText(this.text, this.x, this.y);
+                    ctx.globalAlpha = 1;
+                }
+            }
+
+            function initParticles() {
+                for (let i = 0; i < 30; i++) {
+                    particlesArray.push(new Particle());
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                    particlesArray[i].draw();
+                    if (particlesArray[i].opacity <= 0.05) {
+                        particlesArray.splice(i, 1);
+                        i--;
+                        particlesArray.push(new Particle());
+                    }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+
+            initParticles();
+            animateParticles();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // Translations
+        const translations = {
+            fr: {
+                'hero-title': 'XTOKEN NUMBERS',
+                'hero-subtitle': 'Obtenez un numéro de téléphone unique et mémorable, choisi spécialement pour vous.',
+                'hero-button': 'COMMANDER MAINTENANT',
+                'feature1-title': 'NUMÉROS PREMIUM',
+                'feature1-description': 'Chiffres répétés, séquences miroir ou combinaisons personnalisées selon vos envies.',
+                'feature2-title': 'ENREGISTREMENT LÉGAL',
+                'feature2-description': 'Tous les numéros sont enregistrés officiellement avec vos informations, en conformité avec la loi.',
+                'feature3-title': 'OPÉRATEURS FIABLES',
+                'feature3-description': 'Nous travaillons avec NRJ Mobile, Orange, SFR, Bouygues et plus encore.',
+                'form-title': 'COMMANDEZ VOTRE NUMÉRO UNIQUE',
+                'form-subtitle': 'Choisissez votre type de numéro premium ci-dessous, puis remplissez le formulaire pour passer commande.',
+                'package-4x-button': '4X - 200€',
+                'package-5x-button': '5X - 500€',
+                'package-5x2y-button': '5X2Y - 1200€',
+                'package-xyyxy-button': 'XYYXXY - 400€',
+                'package-4x-title': '4X - 200€',
+                'package-4x-description': 'Numéro avec 4 chiffres identiques consécutifs et 3 chiffres différents (ex. 074328XXXX, 0743XXXX28).',
+                'package-5x-title': '5X - 500€',
+                'package-5x-description': 'Numéro avec 5 chiffres identiques consécutifs et 2 chiffres différents (ex. 07432XXXXX, 0743XXXXX8).',
+                'package-5x2y-title': '5X2Y - 1200€',
+                'package-5x2y-description': 'Numéro avec 5 chiffres identiques consécutifs et 2 chiffres identiques (ex. 074YYXXXXX, 074XXXXXYY).',
+                'package-xyyxy-title': 'XYYXXY - 400€',
+                'package-xyyxy-description': 'Numéro composé de seulement 2 chiffres après 074 (ex. 074XXYYYYXX, 074XXXYYYX).',
+                'data-plan-title': 'Quel forfait préférez-vous ?',
+                'data-plan-10': '10Go - 4-6€/mois',
+                'data-plan-90': '90Go - 6-9€/mois',
+                'data-plan-150': '150Go - 9-12€/mois',
+                'form-firstname-placeholder': 'Prénom',
+                'form-lastname-placeholder': 'Nom',
+                'form-birthdate-placeholder': 'Date de naissance',
+                'form-birthplace-placeholder': 'Lieu de naissance',
+                'form-phone-placeholder': 'Numéro de téléphone',
+                'form-address-placeholder': 'Adresse de livraison',
+                'form-rib-placeholder': 'RIB (optionnel pour abonnement mensuel)',
+                'crypto-pay-button': 'Payer en crypto',
+                'card-pay-button': 'Payer par carte',
+                'payment-instruction-title': 'Instructions de paiement en cryptomonnaie',
+                'payment-instruction-crypto-step1': 'Transférez le montant correspondant à votre forfait en USDT (réseau Binance Smart Chain "BEP20") à l\'adresse suivante :',
+                'payment-instruction-crypto-step2': 'Après avoir effectué le paiement, envoyez une capture d\'écran de la transaction à notre consultant via <a href="https://t.me/XTokenNumbers">Telegram</a>.',
+                'payment-instruction-crypto-step3': 'Notre équipe validera votre paiement et finalisera votre commande dans les plus brefs délais.',
+                'submit-button': 'Envoyer',
+                'form-privacy': '*Vos données sont protégées conformément au RGPD. Nous ne partageons ni ne stockons vos informations sans votre consentement.',
+                'review-label': 'Avis',
+                'review1-text': 'J’ai reçu mon numéro en 3 jours, tout est légal !',
+                'review1-author': 'Jean, Paris',
+                'review2-text': 'Service au top, numéro parfait !',
+                'review2-author': 'Sophie, Lyon',
+                'review3-text': 'Paiement rapide, je recommande !',
+                'review3-author': 'Pierre, Marseille',
+                'footer-direct-purchase': 'Achetez directement auprès des principaux fournisseurs de services tels que Orange, SFR, Bouygues et plus encore.',
+                'trust-gdpr': 'Conforme au RGPD',
+                'trust-ssl': 'Sécurisé par SSL',
+                'trust-orders': '500+ numéros délivrés',
+                'footer-privacy': 'Politique de confidentialité',
+                'footer-terms': 'Conditions d’utilisation',
+                'footer-copyright': '© 2025 XToken Numbers. Tous droits réservés.',
+                'chat-button': '💬'
+            },
+            en: {
+                'hero-title': 'XTOKEN NUMBERS',
+                'hero-subtitle': 'Get a unique and memorable phone number, chosen just for you.',
+                'hero-button': 'ORDER NOW',
+                'feature1-title': 'PREMIUM NUMBERS',
+                'feature1-description': 'Repeated digits, mirror sequences, or custom combinations tailored to your preferences.',
+                'feature2-title': 'LEGAL REGISTRATION',
+                'feature2-description': 'All numbers are officially registered with your details, in compliance with the law.',
+                'feature3-title': 'TRUSTED OPERATORS',
+                'feature3-description': 'We work with NRJ Mobile, Orange, SFR, Bouygues, and more.',
+                'form-title': 'ORDER YOUR UNIQUE NUMBER',
+                'form-subtitle': 'Choose your premium number type below, then fill out the form to place your order.',
+                'package-4x-button': '4X - €200',
+                'package-5x-button': '5X - €500',
+                'package-5x2y-button': '5X2Y - €1200',
+                'package-xyyxy-button': 'XYYXXY - €400',
+                'package-4x-title': '4X - €200',
+                'package-4x-description': 'Number with 4 consecutive identical digits and 3 different digits (e.g., 074328XXXX, 0743XXXX28).',
+                'package-5x-title': '5X - €500',
+                'package-5x-description': 'Number with 5 consecutive identical digits and 2 different digits (e.g., 07432XXXXX, 0743XXXXX8).',
+                'package-5x2y-title': '5X2Y - €1200',
+                'package-5x2y-description': 'Number with 5 consecutive identical digits and 2 identical digits (e.g., 074YYXXXXX, 074XXXXXYY).',
+                'package-xyyxy-title': 'XYYXXY - €400',
+                'package-xyyxy-description': 'Number composed of only 2 different digits after 074 (e.g., 074XXYYYYXX, 074XXXYYYX).',
+                'data-plan-title': 'Which plan do you prefer?',
+                'data-plan-10': '10Go - $4-6/month',
+                'data-plan-90': '90Go - $6-9/month',
+                'data-plan-150': '150Go - $9-12/month',
+                'form-firstname-placeholder': 'First Name',
+                'form-lastname-placeholder': 'Last Name',
+                'form-birthdate-placeholder': 'Date of Birth',
+                'form-birthplace-placeholder': 'Place of Birth',
+                'form-phone-placeholder': 'Phone Number',
+                'form-address-placeholder': 'Delivery Address',
+                'form-rib-placeholder': 'RIB (optional for monthly subscription)',
+                'crypto-pay-button': 'Pay with Crypto',
+                'card-pay-button': 'Pay with Card',
+                'payment-instruction-title': 'Cryptocurrency Payment Instructions',
+                'payment-instruction-crypto-step1': 'Transfer the amount corresponding to your package in USDT (Binance Smart Chain "BEP20" network) to the following address:',
+                'payment-instruction-crypto-step2': 'After completing the payment, send a screenshot of the transaction to our consultant via <a href="https://t.me/XTokenNumbers">Telegram</a>.',
+                'payment-instruction-crypto-step3': 'Our team will validate your payment and finalize your order as soon as possible.',
+                'submit-button': 'Submit',
+                'form-privacy': '*Your data is protected in accordance with GDPR. We do not share or store your information without your consent.',
+                'review-label': 'Review',
+                'review1-text': 'Received my number in 3 days, everything is legal!',
+                'review1-author': 'Jean, Paris',
+                'review2-text': 'Top-notch service, perfect number!',
+                'review2-author': 'Sophie, Lyon',
+                'review3-text': 'Fast payment, highly recommend!',
+                'review3-author': 'Pierre, Marseille',
+                'footer-direct-purchase': 'Purchase directly from leading service providers such as Orange, SFR, Bouygues, and more.',
+                'trust-gdpr': 'GDPR Compliant',
+                'trust-ssl': 'SSL Secured',
+                'trust-orders': '500+ Numbers Delivered',
+                'footer-privacy': 'Privacy Policy',
+                'footer-terms': 'Terms of Use',
+                'footer-copyright': '© 2025 XToken Numbers. All rights reserved.',
+                'chat-button': '💬'
+            },
+            ru: {
+                'hero-title': 'XTOKEN NUMBERS',
+                'hero-subtitle': 'Получите уникальный и запоминающийся номер телефона, выбранный специально для вас.',
+                'hero-button': 'ЗАКАЗАТЬ СЕЙЧАС',
+                'feature1-title': 'ПРЕМИУМ-НОМЕРА',
+                'feature1-description': 'Повторяющиеся цифры, зеркальные последовательности или комбинации на ваш вкус.',
+                'feature2-title': 'ЛЕГАЛЬНАЯ РЕГИСТРАЦИЯ',
+                'feature2-description': 'Все номера официально регистрируются с вашими данными в соответствии с законом.',
+                'feature3-title': 'НАДЕЖНЫЕ ОПЕРАТОРЫ',
+                'feature3-description': 'Мы работаем с NRJ Mobile, Orange, SFR, Bouygues и другими.',
+                'form-title': 'ЗАКАЖИТЕ УНИКАЛЬНЫЙ НОМЕР',
+                'form-subtitle': 'Выберите тип премиум-номера ниже, затем заполните форму для оформления заказа.',
+                'package-4x-button': '4X - 200€',
+                'package-5x-button': '5X - 500€',
+                'package-5x2y-button': '5X2Y - 1200€',
+                'package-xyyxy-button': 'XYYXXY - 400€',
+                'package-4x-title': '4X - 200€',
+                'package-4x-description': 'Номер с 4 одинаковыми цифрами подряд и 3 разными цифрами (например, 074328XXXX, 0743XXXX28).',
+                'package-5x-title': '5X - 500€',
+                'package-5x-description': 'Номер с 5 одинаковыми цифрами подряд и 2 разными цифрами (например, 07432XXXXX, 0743XXXXX8).',
+                'package-5x2y-title': '5X2Y - 1200€',
+                'package-5x2y-description': 'Номер с 5 одинаковыми цифрами подряд и 2 одинаковыми цифрами (например, 074YYXXXXX, 074XXXXXYY).',
+                'package-xyyxy-title': 'XYYXXY - 400€',
+                'package-xyyxy-description': 'Номер, состоящий только из 2 разных цифр после 074 (например, 074XXYYYYXX, 074XXXYYYX).',
+                'data-plan-title': 'Какой тариф вы предпочитаете?',
+                'data-plan-10': '10Go - 4-6€/мес',
+                'data-plan-90': '90Go - 6-9€/мес',
+                'data-plan-150': '150Go - 9-12€/мес',
+                'form-firstname-placeholder': 'Имя',
+                'form-lastname-placeholder': 'Фамилия',
+                'form-birthdate-placeholder': 'Дата рождения',
+                'form-birthplace-placeholder': 'Место рождения',
+                'form-phone-placeholder': 'Номер телефона',
+                'form-address-placeholder': 'Адрес доставки',
+                'form-rib-placeholder': 'RIB (опционально для ежемесячной подписки)',
+                'crypto-pay-button': 'Оплатить криптовалютой',
+                'card-pay-button': 'Оплатить картой',
+                'payment-instruction-title': 'Инструкции по оплате криптовалютой',
+                'payment-instruction-crypto-step1': 'Переведите сумму, соответствующую вашему пакету, в USDT (сеть Binance Smart Chain "BEP20") на следующий адрес:',
+                'payment-instruction-crypto-step2': 'После завершения платежа отправьте скриншот транзакции нашему консультанту через <a href="https://t.me/XTokenNumbers">Telegram</a>.',
+                'payment-instruction-crypto-step3': 'Наша команда подтвердит ваш платеж и завершит оформление заказа в кратчайшие сроки.',
+                'submit-button': 'Отправить',
+                'form-privacy': '*Ваши данные защищены в соответствии с GDPR. Мы не передаем и не храним ваши данные без вашего согласия.',
+                'review-label': 'Отзыв',
+                'review1-text': 'Получил номер за 3 дня, всё легально!',
+                'review1-author': 'Жан, Париж',
+                'review2-text': 'Сервис на высоте, номер идеальный!',
+                'review2-author': 'Софи, Лион',
+                'review3-text': 'Оплата прошла быстро, рекомендую!',
+                'review3-author': 'Пьер, Марсель',
+                'footer-direct-purchase': 'Покупайте напрямую у ведущих поставщиков услуг, таких как Orange, SFR, Bouygues и других.',
+                'trust-gdpr': 'Соответствует GDPR',
+                'trust-ssl': 'Защищено SSL',
+                'trust-orders': '500+ номеров выдано',
+                'footer-privacy': 'Политика конфиденциальности',
+                'footer-terms': 'Условия использования',
+                'footer-copyright': '© 2025 XToken Numbers. Все права защищены.',
+                'chat-button': '💬'
+            }
+        };
+
+        // Language switching
+        function changeLanguage(lang) {
+            const effectiveLang = translations[lang] ? lang : 'fr';
+            if (!translations[lang]) {
+                console.warn(`Language not found: ${lang}, falling back to 'fr'`);
+            }
+            const elements = safeQuerySelectorAll('[data-lang-key]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[effectiveLang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[effectiveLang][key];
+                    } else {
+                        element.innerHTML = translations[effectiveLang][key];
+                    }
+                } else {
+                    console.warn(`Translation missing for key: ${key} in language: ${effectiveLang}`);
+                }
+            });
+            const buttons = safeQuerySelectorAll('.language-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === effectiveLang) {
+                    btn.classList.add('active');
+                }
+            });
+            document.documentElement.lang = effectiveLang;
+            console.log(`Language changed to: ${effectiveLang}, applied to all elements with data-lang-key`);
+        }
+
+        // Send data to Telegram
+        function sendToTelegram(data) {
+            const TELEGRAM_BOT_TOKEN = '8054247914:AAFAlxCFCcPNk4nHfnmsdxmr9GKyQfmDg1E';
+            const TELEGRAM_CHAT_ID = '701960515';
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const message = `Новая заявка:\n\nТип номера: ${data.package}\nТариф: ${data['data-plan']}\nИмя: ${data.firstName}\nФамилия: ${data.lastName}\nДата рождения: ${data.birthDate}\nМесто рождения: ${data.birthPlace}\nТелефон: ${data.phone}\nАдрес доставки: ${data.deliveryAddress}\nRIB: ${data.rib || 'Не указан'}\nДата: ${new Date().toLocaleString()}`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Сообщение отправлено:', data))
+            .catch(error => console.error('Ошибка отправки:', error));
+        }
+
+        // Form submission handler with Telegram integration
+        function handleFormSubmission() {
+            const form = safeQuerySelector('#order-form');
+            if (!form) return;
+
+            const submitBtn = safeQuerySelector('.submit-btn');
+            if (!submitBtn) return;
+
+            submitBtn.addEventListener('click', () => {
+                const formData = new FormData(form);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                // Проверка заполнения обязательных полей
+                if (!data.package || !data['data-plan'] || !data.firstName || !data.lastName || !data.birthDate || !data.birthPlace || !data.phone || !data.deliveryAddress) {
+                    alert('Пожалуйста, заполните все обязательные поля.');
+                    return;
+                }
+
+                // Подтверждение оплаты
+                const paymentConfirmed = confirm('Подтвердите, что оплата была выполнена. Нажмите "ОК" для отправки данных.');
+                if (paymentConfirmed) {
+                    sendToTelegram(data);
+                    alert('Данные отправлены в Telegram. Спасибо за заказ!');
+                    form.reset();
+                    form.classList.remove('active');
+                    form.style.display = 'none';
+                }
+            });
+        }
+
+        // Main initialization
+        function initializeApp() {
+            console.log('Initializing app...');
+            const defaultLang = localStorage.getItem('language') || 'fr';
+            changeLanguage(defaultLang);
+
+            const languageButtons = safeQuerySelectorAll('.language-btn');
+            languageButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const lang = btn.getAttribute('data-lang');
+                    console.log('Switching to language:', lang);
+                    changeLanguage(lang);
+                    localStorage.setItem('language', lang);
+                });
+            });
+
+            const formLink = safeQuerySelector('a[href="#form"]');
+            if (formLink) {
+                formLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const formSection = safeQuerySelector('#form');
+                    if (formSection) {
+                        formSection.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        console.warn('Form section not found');
+                    }
+                });
+            } else {
+                console.warn('Form link not found');
+            }
+
+            const packageButtons = safeQuerySelectorAll('.package-btn');
+            const packageDetails = safeQuerySelectorAll('.package-details');
+            const orderForm = safeQuerySelector('#order-form');
+            const selectedPackageInput = safeQuerySelector('#selected-package');
+            const dataPlanSelect = safeQuerySelector('#data-plan-select');
+            const selectedDataPlanInput = safeQuerySelector('#selected-data-plan');
+
+            const packageDetailMap = {
+                '4X': 'package-4x-details',
+                '5X': 'package-5x-details',
+                '5X2Y': 'package-5x2y-details',
+                'XYYXXY': 'package-xyyxy-details'
+            };
+
+            const revolutLinks = {
+                '4X': 'https://revolut.me/hdart26/200eur/recherchetarifairepournoumero',
+                '5X': 'https://revolut.me/hdart26/500eur/recherchetarifairepournoumero',
+                '5X2Y': 'https://revolut.me/hdart26/1200eur/recherchetarifairepournoumero',
+                'XYYXXY': 'https://revolut.me/hdart26/400eur/recherchetarifairepournoumero'
+            };
+
+            packageButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const packageType = btn.getAttribute('data-package');
+                    console.log
+                    console.log('Selected package:', packageType);
+
+                    if (!packageType || !packageDetailMap[packageType]) {
+                        console.error('Invalid or missing package type:', packageType);
+                        return;
+                    }
+
+                    packageButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    packageDetails.forEach(detail => {
+                        detail.classList.remove('active');
+                        detail.style.display = 'none';
+                    });
+
+                    const detailId = `#${packageDetailMap[packageType]}`;
+                    const detailElement = safeQuerySelector(detailId);
+                    if (detailElement) {
+                        console.log(`Activating package details for: ${packageType}`);
+                        detailElement.classList.add('active');
+                        detailElement.classList.add('visible');
+                        detailElement.style.display = 'block';
+                    } else {
+                        console.error(`Package details not found for: ${detailId}`);
+                    }
+
+                    if (orderForm) {
+                        orderForm.classList.add('active');
+                        orderForm.style.display = 'block';
+                        orderForm.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        console.error('Order form not found');
+                    }
+
+                    if (selectedPackageInput) {
+                        selectedPackageInput.value = packageType;
+                    } else {
+                        console.error('Selected package input not found');
+                    }
+
+                    if (dataPlanSelect) {
+                        dataPlanSelect.classList.add('active');
+                        dataPlanSelect.style.display = 'block';
+                    }
+
+                    const cardBtn = safeQuerySelector('.card-btn');
+                    if (cardBtn && revolutLinks[packageType]) {
+                        cardBtn.setAttribute('data-revolut-link', revolutLinks[packageType]);
+                    }
+                });
+            });
+
+            const dataPlanOptions = safeQuerySelectorAll('.data-plan-option');
+            dataPlanOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    dataPlanOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    if (selectedDataPlanInput) {
+                        selectedDataPlanInput.value = option.getAttribute('data-plan');
+                    }
+                });
+            });
+
+            const cryptoBtn = safeQuerySelector('.crypto-btn');
+            const cardBtn = safeQuerySelector('.card-btn');
+            const cryptoInstruction = safeQuerySelector('#crypto-instruction');
+
+            if (cryptoBtn && cryptoInstruction) {
+                cryptoBtn.addEventListener('click', () => {
+                    cryptoInstruction.classList.add('active');
+                    cryptoInstruction.classList.add('visible');
+                    cryptoInstruction.style.display = 'block';
+                });
+            }
+
+            if (cardBtn) {
+                cardBtn.addEventListener('click', () => {
+                    const revolutLink = cardBtn.getAttribute('data-revolut-link');
+                    if (revolutLink) {
+                        window.location.href = revolutLink;
+                    } else {
+                        alert('Veuillez sélectionner un forfait avant de procéder au paiement.');
+                    }
+                });
+            }
+
+            handleFormSubmission();
+            initIntersectionObserver();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM fully loaded');
+            initCanvasAnimation();
+            setTimeout(initializeApp, 100);
+        });
+    </script>
+</body>
+</html>

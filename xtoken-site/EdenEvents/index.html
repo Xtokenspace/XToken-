@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="XToken group — оформление и организация мероприятий по всей Франции. Свадебные декорации, baby shower, корпоративы, услуги частного водителя.">
+    <meta name="keywords" content="оформление мероприятий, декорации, свадьбы, baby shower, частный водитель, Франция">
+    <meta name="author" content="XToken group">
+    <title>XToken group | Оформление мероприятий во Франции</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" as="style" onload="this.rel='stylesheet'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cormorant Garamond', serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            overscroll-behavior: none;
+        }
+
+        body {
+            background: #f8f6f2;
+            color: #1a1a1a;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Playfair Display', serif;
+            text-align: left;
+            line-height: 1.2;
+            position: relative;
+            margin-right: 20px;
+        }
+
+        header .logo a {
+            text-decoration: none;
+            color: #1a3c34;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        header .logo .xtoken, header .logo .group {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: logoFadeIn 0.5s ease forwards;
+            background: linear-gradient(45deg, #1a3c34, #d4a373);
+            background-size: 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: logoFadeIn 0.5s ease forwards, textShine 3s linear infinite;
+        }
+
+        header .logo .xtoken {
+            font-size: 1.4rem;
+            font-weight: 700;
+            animation-delay: 0.2s;
+        }
+
+        header .logo .group {
+            font-size: 0.84rem;
+            font-weight: 400;
+            animation-delay: 0.4s;
+        }
+
+        header .logo:hover a {
+            transform: scale(1.05);
+        }
+
+        header .logo:hover::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(212, 163, 115, 0.5);
+            z-index: -1;
+            animation: glowPulse 1.5s ease-in-out infinite;
+        }
+
+        #logo-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            transition: color 0.3s ease;
+	    transform: translateX(-25px)
+        }
+
+        .hamburger:hover {
+            color: #d4a373;
+        }
+
+        nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            z-index: 999;
+        }
+
+        nav.active {
+            display: block;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 1.1rem;
+            font-family: 'Playfair Display', serif;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #d4a373;
+            transform: scale(1.05);
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            position: relative;
+            display: flex;
+            align-items: center;
+	    transform: translateX(-25px)
+        }
+
+        .lang-selected {
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #d4a373;
+            font-weight: 700;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .lang-selected:hover {
+            color: #b38b59;
+            transform: scale(1.1);
+        }
+
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 999;
+	    transform: translateX(-25px)
+        }
+
+        .lang-dropdown.active {
+            display: block;
+        }
+
+        .lang-dropdown button {
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #1a1a1a;
+            display: block;
+            padding: 5px 10px;
+            transition: color 0.3s ease;
+        }
+
+        .lang-dropdown button:hover {
+            color: #d4a373;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center/cover;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 90%;
+            padding: 20px;
+        }
+
+        .hero .eden-title {
+            font-size: 6rem;
+            font-family: 'Playfair Display', serif;
+            color: #d4a373;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(212, 163, 115, 0.8), 0 0 25px rgba(212, 163, 115, 0.6);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero .eden-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -10%;
+            width: 20%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+            animation: shine 3s infinite linear;
+        }
+
+        .hero .eden-title span {
+            opacity: 0;
+            display: inline-block;
+            animation: letterBounce 0.5s ease forwards;
+        }
+
+        .hero .eden-title:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        .hero .eden-title:hover::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            box-shadow: 0 0 30px rgba(212, 163, 115, 0.7);
+            border-radius: 10px;
+            z-index: -1;
+            animation: glowPulse 1.5s ease-in-out infinite;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+            display: none;
+        }
+
+        .hero p {
+            font-size: 1.6rem;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease 0.3s;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: #d4a373;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            border-radius: 5px;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            background: #b38b59;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #title-particles, #hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 50px;
+            text-align: center;
+            background: linear-gradient(45deg, #f8f6f2, #f1ece5);
+            background-size: 200% 200%;
+            animation: gradientShift 15s ease infinite;
+            position: relative;
+        }
+
+        .services h2 {
+            font-size: 3rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 50px;
+            color: #1a3c34;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            padding: 40px;
+            background: #f8f6f2;
+            border: 1px solid #e6e4e0;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .service-card a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+
+        .service-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: #d4a373;
+        }
+
+        .service-card h3 {
+            font-size: 2rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 15px;
+            color: #1a3c34;
+        }
+
+        .service-card p {
+            font-size: 1.1rem;
+        }
+
+        /* Service Slider Section */
+        .service-slider {
+            padding: 100px 50px;
+            background: #fff;
+            position: relative;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .service-slider.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slider-item {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background: #f8f6f2;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+
+        .slider-item.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .slider-item h2 {
+            font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
+            color: #1a3c34;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .slider-item p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .slider-item ul {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .slider-item ul li {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .slider-item ul li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #d4a373;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .slider-item form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .slider-item input, .slider-item textarea {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            background: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .slider-item input:focus, .slider-item textarea:focus {
+            box-shadow: 0 0 10px rgba(212, 163, 115, 0.5);
+            outline: none;
+        }
+
+        .slider-item textarea {
+            resize: vertical;
+        }
+
+        .slider-item button {
+            padding: 15px;
+            background: #d4a373;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider-item button:hover {
+            background: #b38b59;
+            transform: translateY(-3px);
+        }
+
+        .slider-item button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .slider-item .contact-info {
+            font-size: 1.3rem;
+        }
+
+        .slider-item .contact-info p {
+            margin: 10px 0;
+        }
+
+        .slider-item .contact-info a {
+            color: #d4a373;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .slider-item .contact-info a:hover {
+            color: #b38b59;
+        }
+
+        .slider-item .contact-info i {
+            margin-right: 10px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .slider-item .contact-info p:hover i {
+            transform: scale(1.2);
+            color: #b38b59;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 50px;
+            background: #1a3c34;
+            color: #fff;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .contact.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .contact h2 {
+            font-size: 3rem;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 50px;
+        }
+
+        .contact form {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .contact input, .contact textarea {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            background: #f8f6f2;
+            font-family: 'Cormorant Garamond', serif;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .contact input:focus, .contact textarea:focus {
+            box-shadow: 0 0 10px rgba(212, 163, 115, 0.5);
+            outline: none;
+        }
+
+        .contact textarea {
+            resize: vertical;
+        }
+
+        .contact button {
+            padding: 15px;
+            background: #d4a373;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact button:hover {
+            background: #b38b59;
+            transform: translateY(-3px);
+        }
+
+        .contact button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .contact-info {
+            margin-top: 40px;
+            font-size: 1.3rem;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+        }
+
+        .contact-info a {
+            color: #d4a373;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #b38b59;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .contact-info p:hover i {
+            transform: scale(1.2);
+            color: #b38b59;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px;
+            background: #1a1a1a;
+            color: #fff;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+        }
+
+        footer a {
+            color: #d4a373;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #b38b59;
+        }
+
+        /* Particle Canvases */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #service-particles, #slider-particles, #contact-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        /* CAPTCHA Styles */
+        .captcha-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .captcha-container.active {
+            display: block;
+        }
+
+        .captcha-container p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #1a3c34;
+        }
+
+        .captcha-container input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #e6e4e0;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            width: 100px;
+            text-align: center;
+        }
+
+        .captcha-container button {
+            padding: 10px 20px;
+            background: #d4a373;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .captcha-container button:hover {
+            background: #b38b59;
+        }
+
+        .captcha-container .error {
+            color: #b33a3a;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .captcha-container .error.active {
+            display: block;
+        }
+
+        /* Animations */
+        @keyframes logoFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        @keyframes shine {
+            0% { left: -10%; }
+            100% { left: 110%; }
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 20px rgba(212, 163, 115, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(212, 163, 115, 0.7); }
+            100% { box-shadow: 0 0 20px rgba(212, 163, 115, 0.5); }
+        }
+
+        @keyframes letterBounce {
+            0% { opacity: 0; transform: translateY(20px); }
+            60% { opacity: 1; transform: translateY(-5px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            header {
+                padding: 10px 15px;
+            }
+
+            .hamburger {
+                font-size: 1.3rem;
+            }
+
+            .lang-selected {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                scroll-behavior: auto;
+            }
+
+            .hero {
+                background-attachment: scroll;
+            }
+
+            header .logo .xtoken {
+                font-size: 1.26rem;
+            }
+
+            header .logo .group {
+                font-size: 0.84rem;
+            }
+
+            .hero .eden-title {
+                font-size: 4rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .services, .service-slider, .contact {
+                padding: 60px 20px;
+            }
+
+            .services h2, .service-slider h2, .contact h2 {
+                font-size: 2.2rem;
+            }
+
+            .service-card {
+                padding: 20px;
+            }
+
+            .service-card h3 {
+                font-size: 1.6rem;
+            }
+
+            .slider-item {
+                padding: 20px;
+            }
+
+            .slider-item h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header .logo .xtoken {
+                font-size: 1.12rem;
+            }
+
+            header .logo .group {
+                font-size: 0.7rem;
+            }
+
+            .hamburger {
+                font-size: 1.2rem;
+            }
+
+            .lang-selected {
+                font-size: 0.7rem;
+            }
+
+            .hero .eden-title {
+                font-size: 3rem;
+            }
+
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+
+            .service-slider form, .contact form {
+                max-width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero .eden-title span, header .logo .xtoken, header .logo .group {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+
+            .hero .eden-title, header .logo a {
+                background: none;
+                color: #d4a373;
+            }
+
+            .hero .eden-title::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="site-header">
+        <div class="logo">
+            <a href="https://xtoken.space">
+                <span class="xtoken">XToken</span>
+                <span class="group">group</span>
+            </a>
+            <canvas id="logo-particles"></canvas>
+        </div>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="lang-switcher">
+            <button class="lang-selected" data-lang="ru">RU</button>
+            <div class="lang-dropdown">
+                <button data-lang="ru">RU</button>
+                <button data-lang="fr">FR</button>
+                <button data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <canvas id="hero-particles"></canvas>
+        <canvas id="title-particles"></canvas>
+        <div class="hero-content">
+            <div class="eden-title" aria-label="Eden Events">
+                <span>E</span><span>d</span><span>e</span><span>n</span><span> </span>
+                <span>E</span><span>v</span><span>e</span><span>n</span><span>t</span><span>s</span>
+            </div>
+            <h1>XToken group</h1>
+            <p>Ваш изысканный партнёр в создании незабываемых событий по всей Франции</p>
+            <a href="#contact" class="cta-button">Связаться с нами</a>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <h2>Наши услуги</h2>
+        <canvas id="service-particles"></canvas>
+        <div class="service-grid">
+            <div class="service-card">
+                <a href="#service-slider" data-slide="decoration">
+                    <h3>Декорации мероприятий</h3>
+                    <p>Изысканное оформление залов и площадок для свадеб, корпоративов, помолвок и других торжеств.</p>
+                </a>
+            </div>
+            <div class="service-card">
+                <a href="#service-slider" data-slide="baby-shower">
+                    <h3>Организация Baby Shower</h3>
+                    <p>Создание утончённой атмосферы для будущих мам с индивидуальным подходом.</p>
+                </a>
+            </div>
+            <div class="service-card">
+                <a href="#service-slider" data-slide="driver">
+                    <h3>Частный водитель</h3>
+                    <p>Эксклюзивные услуги сопровождения на автомобилях премиум-класса.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="service-slider" class="service-slider">
+        <canvas id="slider-particles"></canvas>
+        <div class="slider-item" data-slide="decoration">
+            <h2>Декорации мероприятий</h2>
+            <p>Мы превращаем ваши мечты в реальность, создавая волшебные и утончённые декорации для любого события. Будь то романтическая свадьба, элегантный корпоратив или уютная помолвка, наши дизайнеры воплотят вашу уникальную историю в каждом элементе оформления. От цветочных арок до изысканных столовых композиций — мы заботимся о каждой детали, чтобы ваше мероприятие стало незабываемым.</p>
+            <ul>
+                <li>Индивидуальный дизайн, отражающий ваш стиль и тематику события.</li>
+                <li>Высококачественные материалы и эксклюзивные элементы декора.</li>
+                <li>Полное сопровождение: от концепции до реализации.</li>
+                <li>Гибкость в бюджете без компромиссов в эстетике.</li>
+            </ul>
+            <h3>Почему выбирают нас?</h3>
+            <ul>
+                <li>Опыт: Более 5 лет создания незабываемых событий по всей Франции.</li>
+                <li>Креативность: Уникальные идеи, которые выделяют ваше мероприятие.</li>
+                <li>Внимание к деталям: Каждая мелочь продумана для идеального результата.</li>
+                <li>Профессионализм: Команда экспертов, работающая с душой.</li>
+            </ul>
+            <form aria-label="Форма заказа декораций">
+                <input type="text" name="name" placeholder="Ваше имя" required aria-label="Имя">
+    		<input type="email" name="email" placeholder="Ваш email" required aria-label="Email">
+    		<input type="tel" name="phone" placeholder="Ваш телефон" required aria-label="Телефон">
+    		<input type="date" name="date" placeholder="Дата мероприятия" required aria-label="Дата мероприятия">
+   		<textarea name="message" placeholder="Опишите ваше мероприятие" rows="5" required aria-label="Описание мероприятия"></textarea>
+    		<button type="submit">Запросить предложение</button>
+            </form>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> <a href="tel:+33767572037">0767572037</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection#abc5c4c5ce8ec5d6c5ced4d39096e0c7cdc1c9cc8ec3cfcd"><span class="__cf_email__" data-cfemail="9dfafbfaf1b1fae9faf1ebecafa9dff8f2fef6f3b1fcf0f2">[email protected]</span></a></p>
+                <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/eden_events06" target="_blank">@eden_events06</a></p>
+            </div>
+        </div>
+        <div class="slider-item" data-slide="baby-shower">
+            <h2>Организация Baby Shower</h2>
+            <p>Празднование ожидания малыша должно быть нежным, тёплым и незабываемым. Мы создаём утончённые и персонализированные baby shower, которые отражают радость этого особенного момента. От тематических декораций до изысканных угощений — мы позаботимся о каждой детали, чтобы будущая мама и её гости чувствовали себя особенными.</p>
+            <ul>
+                <li>Тематическое оформление, вдохновлённое вашими пожеланиями.</li>
+                <li>Организация угощений, игр и развлечений для гостей.</li>
+                <li>Фотозоны для создания памятных снимков.</li>
+                <li>Полная координация мероприятия для вашего комфорта.</li>
+            </ul>
+            <h3>Почему выбирают нас?</h3>
+            <ul>
+                <li>Эмоциональный подход: Мы создаём атмосферу любви и заботы.</li>
+                <li>Персонализация: Каждый baby shower уникален и отражает вашу историю.</li>
+                <li>Качество: Используем только безопасные и эстетичные материалы.</li>
+                <li>Гибкость: Работаем с любым масштабом и бюджетом.</li>
+            </ul>
+            <form aria-label="Форма заказа baby shower">
+                <input type="text" name="name" placeholder="Ваше имя" required aria-label="Имя">
+    		<input type="email" name="email" placeholder="Ваш email" required aria-label="Email">
+    		<input type="tel" name="phone" placeholder="Ваш телефон" required aria-label="Телефон">
+    		<input type="date" name="date" placeholder="Дата мероприятия" required aria-label="Дата мероприятия">
+    		<textarea name="message" placeholder="Опишите ваш baby shower" rows="5" required aria-label="Описание мероприятия"></textarea>
+    		<button type="submit">Запросить предложение</button>
+            </form>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> <a href="tel:+33767572037">0767572037</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection#abc5c4c5ce8ec5d6c5ced4d39096e0c7cdc1c9cc8ec3cfcd"><span class="__cf_email__" data-cfemail="9dfafbfaf1b1fae9faf1ebecafa9dff8f2fef6f3b1fcf0f2">[email protected]</span></a></p>
+                <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/eden_events06" target="_blank">@eden_events06</a></p>
+            </div>
+        </div>
+        <div class="slider-item" data-slide="driver">
+            <h2>Частный водитель</h2>
+            <p>Путешествуйте с комфортом и стилем благодаря нашим услугам частного водителя. Мы предлагаем эксклюзивное сопровождение на автомобилях премиум-класса, обеспечивая безопасность, пунктуальность и высочайший уровень сервиса. Будь то трансфер на мероприятие, деловая поездка или экскурсия по Франции, мы гарантируем незабываемый опыт.</p>
+            <ul>
+                <li>Автомобили премиум-класса с комфортабельным салоном.</li>
+                <li>Профессиональные водители с отличным знанием маршрутов.</li>
+                <li>Гибкое расписание и индивидуальный подход.</li>
+                <li>Конфиденциальность и высокий уровень сервиса.</li>
+            </ul>
+            <h3>Почему выбирают нас?</h3>
+            <ul>
+                <li>Надёжность: Пунктуальность и безопасность — наш приоритет.</li>
+                <li>Эксклюзивность: Автомобили от ведущих мировых брендов.</li>
+                <li>Персонализация: Адаптируемся под ваши потребности и график.</li>
+                <li>Опыт: Годы работы с клиентами премиум-сегмента.</li>
+            </ul>
+            <form aria-label="Форма заказа водителя">
+                <input type="text" name="name" placeholder="Ваше имя" required aria-label="Имя">
+   		<input type="email" name="email" placeholder="Ваш email" required aria-label="Email">
+    		<input type="tel" name="phone" placeholder="Ваш телефон" required aria-label="Телефон">
+    		<input type="date" name="date" placeholder="Дата поездки" required aria-label="Дата поездки">
+    		<textarea name="message" placeholder="Опишите ваш маршрут или пожелания" rows="5" required aria-label="Описание поездки"></textarea>
+    		<button type="submit">Запросить предложение</button>
+            </form>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> <a href="tel:+33767572037">0767572037</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection#abc5c4c5ce8ec5d6c5ced4d39096e0c7cdc1c9cc8ec3cfcd"><span class="__cf_email__" data-cfemail="9dfafbfaf1b1fae9faf1ebecafa9dff8f2fef6f3b1fcf0f2">[email protected]</span></a></p>
+                <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/eden_events06" target="_blank">@eden_events06</a></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <canvas id="contact-particles"></canvas>
+        <h2>Свяжитесь с нами</h2>
+        <form aria-label="Форма обратной связи">
+    	   <input type="text" name="name" placeholder="Ваше имя" required aria-label="Имя">
+   	   <input type="email" name="email" placeholder="Ваш email" required aria-label="Email">
+    	   <textarea name="message" placeholder="Ваше сообщение" rows="5" required aria-label="Сообщение"></textarea>
+    	   <button type="submit">Отправить</button>
+	</form>
+        <div class="contact-info">
+            <p><i class="fas fa-phone"></i> <a href="tel:+33767572037">0767572037</a></p>
+            <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection#abc5c4c5ce8ec5d6c5ced4d39096e0c7cdc1c9cc8ec3cfcd"><span class="__cf_email__" data-cfemail="9dfafbfaf1b1fae9faf1ebecafa9dff8f2fef6f3b1fcf0f2">[email protected]</span></a></p>
+            <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/eden_events06" target="_blank">@eden_events06</a></p>
+            <p><i class="fas fa-money-bill"></i> Paiement: Espèces (Cash), PayPal</p>
+        </div>
+    </section>
+
+    <!-- CAPTCHA Modal -->
+    <div class="captcha-container" id="captcha-modal">
+        <p id="captcha-question"></p>
+        <input type="number" id="captcha-answer" placeholder="Ответ" required aria-label="CAPTCHA ответ">
+        <button type="button" id="captcha-submit">Подтвердить</button>
+        <p class="error" id="captcha-error">Неверный ответ, попробуйте снова.</p>
+    </div>
+
+    <footer>
+        <p>© 2025 XToken group. Все права защищены. | <a href="https://www.instagram.com/eden_events06" target="_blank"><i class="fab fa-instagram"></i> @eden_events06</a></p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // Adjust body padding-top based on header height
+        function adjustBodyPadding() {
+            const header = document.getElementById('site-header');
+            if (header) {
+                document.body.style.paddingTop = header.offsetHeight + 'px';
+            }
+        }
+
+        // Call initially and on resize/load
+        window.addEventListener('load', adjustBodyPadding);
+        window.addEventListener('resize', adjustBodyPadding);
+
+        // Hamburger Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const nav = document.querySelector('nav');
+        hamburger.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+
+        // Close menu when clicking a nav link
+        document.querySelectorAll('nav ul li a').forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+            });
+        });
+
+        // Language Switcher
+        const langSelected = document.querySelector('.lang-selected');
+        const langDropdown = document.querySelector('.lang-dropdown');
+        const langButtons = document.querySelectorAll('.lang-dropdown button');
+
+        langSelected.addEventListener('click', () => {
+            langDropdown.classList.toggle('active');
+        });
+
+        langButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedLang = button.dataset.lang;
+                langSelected.textContent = selectedLang.toUpperCase();
+                langSelected.dataset.lang = selectedLang;
+                langDropdown.classList.remove('active');
+                changeLanguage(selectedLang);
+            });
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                target.scrollIntoView({ behavior: 'smooth' });
+
+                // Handle slider activation
+                const slideId = this.dataset.slide;
+                if (slideId && targetId === '#service-slider') {
+                    const slides = document.querySelectorAll('.slider-item');
+                    slides.forEach(slide => {
+                        slide.classList.remove('active');
+                        if (slide.dataset.slide === slideId) {
+                            slide.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+
+        function changeLanguage(lang) {
+            const content = {
+                ru: {
+                    title: "XToken group | Оформление мероприятий во Франции",
+                    hero_title: "Eden Events",
+                    hero_p: "Ваш изысканный партнёр в создании незабываемых событий по всей Франции",
+                    cta: "Связаться с нами",
+                    services_h2: "Наши услуги",
+                    service1_h3: "Декорации мероприятий",
+                    service1_p: "Изысканное оформление залов и площадок для свадеб, корпоративов, помолвок и других торжеств.",
+                    service2_h3: "Организация Baby Shower",
+                    service2_p: "Создание утончённой атмосферы для будущих мам с индивидуальным подходом.",
+                    service3_h3: "Частный водитель",
+                    service3_p: "Эксклюзивные услуги сопровождения на автомобилях премиум-класса.",
+                    decoration_h2: "Декорации мероприятий",
+                    decoration_p: "Мы превращаем ваши мечты в реальность, создавая волшебные и утончённые декорации для любого события. Будь то романтическая свадьба, элегантный корпоратив или уютная помолвка, наши дизайнеры воплотят вашу уникальную историю в каждом элементе оформления. От цветочных арок до изысканных столовых композиций — мы заботимся о каждой детали, чтобы ваше мероприятие стало незабываемым.",
+                    baby_shower_h2: "Организация Baby Shower",
+                    baby_shower_p: "Празднование ожидания малыша должно быть нежным, тёплым и незабываемым. Мы создаём утончённые и персонализированные baby shower, которые отражают радость этого особенного момента. От тематических декораций до изысканных угощений — мы позаботимся о каждой детали, чтобы будущая мама и её гости чувствовали себя особенными.",
+                    driver_h2: "Частный водитель",
+                    driver_p: "Путешествуйте с комфортом и стилем благодаря нашим услугам частного водителя. Мы предлагаем эксклюзивное сопровождение на автомобилях премиум-класса, обеспечивая безопасность, пунктуальность и высочайший уровень сервиса. Будь то трансфер на мероприятие, деловая поездка или экскурсия по Франции, мы гарантируем незабываемый опыт.",
+                    contact_h2: "Свяжитесь с нами",
+                    form_name: "Ваше имя",
+                    form_email: "Ваш email",
+                    form_phone: "Ваш телефон",
+                    form_date: "Дата мероприятия",
+                    form_message: "Опишите ваше мероприятие",
+                    form_submit: "Запросить предложение",
+                    form_general_message: "Ваше сообщение",
+                    form_general_submit: "Отправить",
+                    footer: "© 2025 XToken group. Все права защищены. | <a href='https://www.instagram.com/eden_events06' target='_blank'><i class='fab fa-instagram'></i> @eden_events06</a>"
+                },
+                fr: {
+                    title: "XToken group | Décoration et organisation d'événements en France",
+                    hero_title: "Eden Events",
+                    hero_p: "Votre partenaire raffiné pour la création d'événements inoubliables à travers la France",
+                    cta: "Nous contacter",
+                    services_h2: "Nos services",
+                    service1_h3: "Décoration d'événements",
+                    service1_p: "Décoration élégante de salles et espaces pour mariages, événements d'entreprise, fiançailles et autres célébrations.",
+                    service2_h3: "Organisation de Baby Shower",
+                    service2_p: "Création d'une ambiance sophistiquée pour les futures mamans avec une approche personnalisée.",
+                    service3_h3: "Chauffeur privé",
+                    service3_p: "Services exclusifs d'accompagnement en voitures de luxe.",
+                    decoration_h2: "Décoration d'événements",
+                    decoration_p: "Nous transformons vos rêves en réalité en créant des décorations magiques et raffinées pour tout événement. Qu'il s'agisse d'un mariage romantique, d'un événement d'entreprise élégant ou de fiançailles intimes, nos designers donnent vie à votre histoire unique dans chaque détail. Des arches florales aux compositions de table exquises, nous veillons à ce que votre événement soit inoubliable.",
+                    baby_shower_h2: "Organisation de Baby Shower",
+                    baby_shower_p: "Célébrer l'arrivée d'un bébé doit être doux, chaleureux et mémorable. Nous créons des baby showers raffinés et personnalisés qui reflètent la joie de ce moment spécial. Des décorations thématiques aux délicieux rafraîchissements, nous prenons soin de chaque détail pour que la future maman et ses invités se sentent privilégiés.",
+                    driver_h2: "Chauffeur privé",
+                    driver_p: "Voyagez avec confort et style grâce à nos services de chauffeur privé. Nous offrons un accompagnement exclusif dans des véhicules de luxe, garantissant sécurité, ponctualité et un service de haut niveau. Que ce soit pour un transfert vers un événement, un voyage d'affaires ou une excursion en France, nous vous promettons une expérience inoubliable.",
+                    contact_h2: "Contactez-nous",
+                    form_name: "Votre nom",
+                    form_email: "Votre email",
+                    form_phone: "Votre téléphone",
+                    form_date: "Date de l'événement",
+                    form_message: "Décrivez votre événement",
+                    form_submit: "Demander un devis",
+                    form_general_message: "Votre message",
+                    form_general_submit: "Envoyer",
+                    footer: "© 2025 XToken group. Tous droits réservés. | <a href='https://www.instagram.com/eden_events06' target='_blank'><i class='fab fa-instagram'></i> @eden_events06</a>"
+                },
+                en: {
+                    title: "XToken group | Event Decoration and Organization in France",
+                    hero_title: "Eden Events",
+                    hero_p: "Your sophisticated partner in crafting unforgettable events across France",
+                    cta: "Contact Us",
+                    services_h2: "Our Services",
+                    service1_h3: "Event Decoration",
+                    service1_p: "Elegant decoration of venues for weddings, corporate events, engagements, and other celebrations.",
+                    service2_h3: "Baby Shower Organization",
+                    service2_p: "Crafting a refined atmosphere for expectant mothers with a personalized approach.",
+                    service3_h3: "Private Driver",
+                    service3_p: "Exclusive accompaniment services in premium vehicles.",
+                    decoration_h2: "Event Decoration",
+                    decoration_p: "We turn your dreams into reality, creating magical and refined decorations for any event. Whether it’s a romantic wedding, an elegant corporate event, or an intimate engagement, our designers bring your unique story to life in every detail. From floral arches to exquisite table settings, we ensure your event is unforgettable.",
+                    baby_shower_h2: "Baby Shower Organization",
+                    baby_shower_p: "Celebrating the anticipation of a baby should be tender, warm, and memorable. We create refined and personalized baby showers that reflect the joy of this special moment. From thematic decorations to exquisite treats, we take care of every detail to make the expectant mother and her guests feel special.",
+                    driver_h2: "Private Driver",
+                    driver_p: "Travel in comfort and style with our private driver services. We offer exclusive accompaniment in premium vehicles, ensuring safety, punctuality, and the highest level of service. Whether it’s a transfer to an event, a business trip, or a tour of France, we guarantee an unforgettable experience.",
+                    contact_h2: "Get in Touch",
+                    form_name: "Your Name",
+                    form_email: "Your Email",
+                    form_phone: "Your Phone",
+                    form_date: "Event Date",
+                    form_message: "Describe Your Event",
+                    form_submit: "Request a Quote",
+                    form_general_message: "Your Message",
+                    form_general_submit: "Submit",
+                    footer: "© 2025 XToken group. All rights reserved. | <a href='https://www.instagram.com/eden_events06' target='_blank'><i class='fab fa-instagram'></i> @eden_events06</a>"
+                }
+            };
+
+            document.title = content[lang].title;
+            document.querySelector('.eden-title').innerHTML = content[lang].hero_title.split('').map((char, i) => `<span style="animation-delay: ${i * 0.1}s">${char === ' ' ? ' ' : char}</span>`).join('');
+            document.querySelector('.hero p').textContent = content[lang].hero_p;
+            document.querySelector('.cta-button').textContent = content[lang].cta;
+            document.querySelector('.services h2').textContent = content[lang].services_h2;
+            document.querySelectorAll('.service-card h3')[0].textContent = content[lang].service1_h3;
+            document.querySelectorAll('.service-card p')[0].textContent = content[lang].service1_p;
+            document.querySelectorAll('.service-card h3')[1].textContent = content[lang].service2_h3;
+            document.querySelectorAll('.service-card p')[1].textContent = content[lang].service2_p;
+            document.querySelectorAll('.service-card h3')[2].textContent = content[lang].service3_h3;
+            document.querySelectorAll('.service-card p')[2].textContent = content[lang].service3_p;
+            document.querySelector('.slider-item[data-slide="decoration"] h2').textContent = content[lang].decoration_h2;
+            document.querySelector('.slider-item[data-slide="decoration"] > p').textContent = content[lang].decoration_p;
+            document.querySelector('.slider-item[data-slide="baby-shower"] h2').textContent = content[lang].baby_shower_h2;
+            document.querySelector('.slider-item[data-slide="baby-shower"] > p').textContent = content[lang].baby_shower_p;
+            document.querySelector('.slider-item[data-slide="driver"] h2').textContent = content[lang].driver_h2;
+            document.querySelector('.slider-item[data-slide="driver"] > p').textContent = content[lang].driver_p;
+            document.querySelector('.contact h2').textContent = content[lang].contact_h2;
+            document.querySelectorAll('input[placeholder="Ваше имя"]').forEach(input => input.placeholder = content[lang].form_name);
+            document.querySelectorAll('input[placeholder="Ваш email"]').forEach(input => input.placeholder = content[lang].form_email);
+            document.querySelectorAll('input[placeholder="Ваш телефон"]').forEach(input => input.placeholder = content[lang].form_phone);
+            document.querySelectorAll('input[placeholder="Дата мероприятия"]').forEach(input => input.placeholder = content[lang].form_date);
+            document.querySelectorAll('input[placeholder="Дата поездки"]').forEach(input => input.placeholder = content[lang].form_date);
+            document.querySelector('textarea[placeholder="Опишите ваше мероприятие"]').placeholder = content[lang].form_message;
+            document.querySelector('textarea[placeholder="Опишите ваш baby shower"]').placeholder = content[lang].form_message;
+            document.querySelector('textarea[placeholder="Опишите ваш маршрут или пожелания"]').placeholder = content[lang].form_message;
+            document.querySelector('textarea[placeholder="Ваше сообщение"]').placeholder = content[lang].form_general_message;
+            document.querySelectorAll('.slider-item button').forEach(button => button.textContent = content[lang].form_submit);
+            document.querySelector('.contact button').textContent = content[lang].form_general_submit;
+            document.querySelector('footer p').innerHTML = content[lang].footer;
+
+            document.querySelectorAll('nav ul li a')[0].textContent = lang === 'ru' ? 'Главная' : lang === 'fr' ? 'Accueil' : 'Home';
+            document.querySelectorAll('nav ul li a')[1].textContent = lang === 'ru' ? 'Услуги' : lang === 'fr' ? 'Services' : 'Services';
+            document.querySelectorAll('nav ul li a')[2].textContent = lang === 'ru' ? 'Контакты' : lang === 'fr' ? 'Contact' : 'Contact';
+        }
+
+        // CAPTCHA Logic
+        let currentForm = null;
+        let captchaAnswer = 0;
+
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            captchaAnswer = num1 + num2;
+            document.getElementById('captcha-question').textContent = `${num1} + ${num2} = ?`;
+            document.getElementById('captcha-answer').value = '';
+            document.getElementById('captcha-error').classList.remove('active');
+        }
+
+        function showCaptcha(form) {
+            currentForm = form;
+            document.getElementById('captcha-modal').classList.add('active');
+            generateCaptcha();
+        }
+
+        document.getElementById('captcha-submit').addEventListener('click', () => {
+            const userAnswer = parseInt(document.getElementById('captcha-answer').value);
+            if (userAnswer === captchaAnswer) {
+                document.getElementById('captcha-modal').classList.remove('active');
+                handleFormSubmission(currentForm);
+            } else {
+                document.getElementById('captcha-error').classList.add('active');
+                generateCaptcha();
+            }
+        });
+
+        // Form Submission with CAPTCHA and Telegram
+async function handleFormSubmission(form) {
+    const button = form.querySelector('button');
+    button.classList.add('loading');
+    button.disabled = true;
+
+    // Collect form data
+    const formData = new FormData(form);
+    let message = '';
+    const slide = form.closest('.slider-item')?.dataset.slide;
+    if (slide) {
+        switch (slide) {
+            case 'decoration':
+                message += 'Заявка на декорации мероприятий\n';
+                break;
+            case 'baby-shower':
+                message += 'Заявка на организацию Baby Shower\n';
+                break;
+            case 'driver':
+                message += 'Заявка на услуги частного водителя\n';
+                break;
+        }
+    } else {
+        message += 'Общая заявка\n';
+    }
+
+    message += `Имя: ${formData.get('name')}\n`;
+    message += `Email: ${formData.get('email')}\n`;
+    if (formData.get('phone')) {
+        message += `Телефон: ${formData.get('phone')}\n`;
+    }
+    if (formData.get('date')) {
+        message += `Дата: ${formData.get('date')}\n`;
+    }
+    message += `Сообщение: ${formData.get('message')}\n`;
+
+    // Send message to Telegram
+    const botToken = '8135602347:AAGNOLJmD3_oBeAV7opRl_VkFrDNEINGFWE';
+    const chatId = '5237804529';
+    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+    try {
+        const response = await fetch(telegramUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: message
+            })
+        });
+
+        if (response.ok) {
+            alert('Заявка успешно отправлена в Telegram!');
+        } else {
+            throw new Error('Ошибка при отправке сообщения в Telegram');
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при отправке заявки. Пожалуйста, попробуйте снова.');
+    } finally {
+        button.classList.remove('loading');
+        button.disabled = false;
+    }
+}
+
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                showCaptcha(form);
+            });
+        });
+
+        // Scroll Reveal for Service Cards, Slider, and Contact Section
+        const serviceCards = document.querySelectorAll('.service-card');
+        const sliderSection = document.querySelector('.service-slider');
+        const contactSection = document.querySelector('.contact');
+        const observerOptions = {
+            threshold: 0.2
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        serviceCards.forEach(card => observer.observe(card));
+        observer.observe(sliderSection);
+        observer.observe(contactSection);
+
+        // Particle Effects with Mobile Optimization
+        function createParticleSystem(canvasId, sectionSelector, particleCount, type, targetElement) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let isActive = true;
+            const isMobile = window.innerWidth <= 768;
+
+            function resizeCanvas() {
+                const section = document.querySelector(sectionSelector);
+                canvas.width = section ? section.offsetWidth : window.innerWidth;
+                canvas.height = section ? section.offsetHeight : window.innerHeight;
+            }
+
+            // Debounce resize
+            let resizeTimeout;
+            function debouncedResize() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(resizeCanvas, 100);
+            }
+
+            resizeCanvas();
+
+            class Particle {
+                constructor(x, y) {
+                    this.x = x || Math.random() * canvas.width;
+                    this.y = y || Math.random() * canvas.height;
+                    this.size = type === 'sparkle' ? Math.random() * 2 + 1 : Math.random() * 3 + 1;
+                    this.opacity = type === 'sparkle' ? 0.8 : 0.4;
+                    if (type === 'confetti') {
+                        this.speedY = Math.random() * (isMobile ? 0.5 : 1) + 0.5;
+                        this.rotation = Math.random() * Math.PI * 2;
+                        this.rotationSpeed = Math.random() * 0.02 - 0.01;
+                        this.y = -10;
+                    } else if (type === 'sparkle') {
+                        this.speedX = Math.random() * 2 - 1;
+                        this.speedY = Math.random() * 2 - 1;
+                        this.life = 60;
+                    } else if (type === 'orbit') {
+                        this.angle = Math.random() * Math.PI * 2;
+                        this.radius = Math.random() * (isMobile ? 30 : 50) + 30;
+                        this.speed = Math.random() * 0.05 + 0.02;
+                        this.opacity = Math.random() * 0.4 + 0.2;
+                    } else {
+                        this.speedX = Math.random() * 0.2 - 0.1;
+                        this.speedY = Math.random() * 0.2 - 0.1;
+                    }
+                }
+
+                update() {
+                    if (type === 'confetti') {
+                        this.y += this.speedY;
+                        this.rotation += this.rotationSpeed;
+                        if (this.y > canvas.height) {
+                            this.y = -10;
+                            this.x = Math.random() * canvas.width;
+                        }
+                    } else if (type === 'sparkle') {
+                        this.x += this.speedX;
+                        this.y += this.speedY;
+                        this.opacity -= 0.02;
+                        this.life--;
+                    } else if (type === 'orbit') {
+                        this.angle += this.speed;
+                        const rect = targetElement.getBoundingClientRect();
+                        const centerX = rect.left + rect.width / 2 - document.querySelector(sectionSelector).getBoundingClientRect().left;
+                        const centerY = rect.top + rect.height / 2 - document.querySelector(sectionSelector).getBoundingClientRect().top;
+                        this.x = centerX + Math.cos(this.angle) * this.radius;
+                        this.y = centerY + Math.sin(this.angle) * this.radius;
+                        this.opacity += Math.random() * 0.02 - 0.01;
+                        this.opacity = Math.max(0.2, Math.min(0.6, this.opacity));
+                    } else {
+                        this.x += this.speedX;
+                        this.y += this.speedY;
+                        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                        this.opacity += Math.random() * 0.02 - 0.01;
+                        this.opacity = Math.max(0.4, Math.min(0.8, this.opacity));
+                    }
+                }
+
+                draw() {
+                    ctx.fillStyle = `rgba(212, 163, 115, ${this.opacity})`;
+                    ctx.beginPath();
+                    if (type === 'confetti') {
+                        ctx.save();
+                        ctx.translate(this.x, this.y);
+                        ctx.rotate(this.rotation);
+                        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                        ctx.restore();
+                    } else {
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = type === 'sparkle' ? 5 : 10;
+                        ctx.shadowColor = 'rgba(212, 163, 115, 0.5)';
+                    }
+                }
+            }
+
+            // Adjust particle count for mobile
+            const adjustedCount = isMobile ? Math.floor(particleCount / 2) : particleCount;
+            for (let i = 0; i < adjustedCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                if (!isActive) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles = particles.filter(p => !p.life || p.life > 0);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            // Pause animations when section is out of view
+            const section = document.querySelector(sectionSelector);
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    isActive = entry.isIntersecting;
+                    if (isActive) animate();
+                });
+            }, { threshold: 0 });
+
+            observer.observe(section);
+            animate();
+
+            if (type === 'sparkle') {
+                return (x, y) => {
+                    for (let i = 0; i < (isMobile ? 5 : 10); i++) {
+                        particles.push(new Particle(x, y));
+                    }
+                };
+            }
+
+            window.addEventListener('resize', debouncedResize);
+            return () => {
+                observer.disconnect();
+                window.removeEventListener('resize', debouncedResize);
+            };
+        }
+
+        // Hero Particles (Confetti)
+        createParticleSystem('hero-particles', '.hero', 20, 'confetti');
+
+        // Logo Particles (Sparkles)
+        const logoCanvas = document.getElementById('logo-particles');
+        logoCanvas.width = document.querySelector('.logo').offsetWidth;
+        logoCanvas.height = document.querySelector('.logo').offsetHeight;
+        const createLogoSparkles = createParticleSystem('logo-particles', '.logo', 0, 'sparkle');
+        const logo = document.querySelector('.logo');
+        logo.addEventListener('mouseenter', (e) => {
+            const rect = logo.getBoundingClientRect();
+            const x = rect.width / 2;
+            const y = rect.height / 2;
+            createLogoSparkles(x, y);
+        });
+        setInterval(() => {
+            const rect = logo.getBoundingClientRect();
+            const x = rect.width / 2;
+            const y = rect.height / 2;
+            createLogoSparkles(x, y);
+        }, 7000);
+
+        // Title Particles (Orbiting Orbs)
+        const titleElement = document.querySelector('.eden-title');
+        createParticleSystem('title-particles', '.hero', 10, 'orbit', titleElement);
+        titleElement.addEventListener('mouseenter', (e) => {
+            const rect = titleElement.getBoundingClientRect();
+            const x = rect.left + rect.width / 2 - document.querySelector('.hero').getBoundingClientRect().left;
+            const y = rect.top + rect.height / 2 - document.querySelector('.hero').getBoundingClientRect().top;
+            createParticleSystem('title-particles', '.hero', 10, 'sparkle')(x, y);
+        });
+
+        // Service Particles (Sparkles on Hover)
+        const createSparkles = createParticleSystem('service-particles', '.services', 0, 'sparkle');
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2 - document.querySelector('.services').getBoundingClientRect().top;
+                createSparkles(x, y);
+            });
+        });
+
+        // Slider Particles (Pulsing Orbs)
+        createParticleSystem('slider-particles', '.service-slider', 15, 'orb');
+
+        // Contact Particles (Pulsing Orbs)
+        createParticleSystem('contact-particles', '.contact', 15, 'orb');
+    </script>
+</body>
+</html>
